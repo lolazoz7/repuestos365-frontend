@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - Repuestos 365</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-yellow-400 to-yellow-500 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white p-8 rounded-lg border-4 border-black shadow-2xl max-w-md w-full">
+    <div class="text-center mb-6">
+      <img src="logo-carro.png" alt="Repuestos 365" class="h-16 mx-auto mb-4">
+      <h1 class="text-2xl font-bold text-black">Panel de Administrador</h1>
+      <p class="text-gray-600">Inicia sesión para continuar</p>
+    </div>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-bold mb-1 text-black">Email</label>
+        <input type="email" id="loginEmail" required class="w-full border-2 border-black rounded px-3 py-2">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-bold mb-1 text-black">Contraseña</label>
+        <input type="password" id="loginPassword" required class="w-full border-2 border-black rounded px-3 py-2">
+      </div>
+
+      <button type="submit" class="w-full bg-black text-yellow-400 py-3 rounded-lg font-bold border-2 border-yellow-400 hover:bg-gray-800">
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <div class="mt-6 p-4 bg-yellow-50 rounded border border-yellow-400">
+      <p class="text-xs text-gray-700 font-bold mb-2">🔑 Datos de prueba:</p>
+      <p class="text-xs text-gray-600">Email: admin@repuestos365.com</p>
+      <p class="text-xs text-gray-600">Contraseña: admin123</p>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://repuestos365-backend-production.up.railway.app';
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API_URL}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // GUARDAR EN AMBOS: localStorage Y sessionStorage
+          localStorage.setItem('adminToken', data.token);
+          localStorage.setItem('adminNombre', data.usuario.nombre);
+          sessionStorage.setItem('adminToken', data.token);
+          sessionStorage.setItem('adminNombre', data.usuario.nombre);
+          
+          // VERIFICAR INMEDIATAMENTE
+          const verifyToken = localStorage.getItem('adminToken');
+          const verifySession = sessionStorage.getItem('adminToken');
+          
+          console.log('✅ Token guardado en localStorage:', verifyToken ? 'SÍ' : 'NO');
+          console.log('✅ Token guardado en sessionStorage:', verifySession ? 'SÍ' : 'NO');
+          console.log(' Token:', verifyToken ? verifyToken.substring(0, 50) + '...' : 'NULO');
+          
+          if (!verifyToken && !verifySession) {
+            alert('⚠️ ERROR CRÍTICO: No se pudo guardar el token.\n\nEsto puede pasar si:\n1. Estás usando modo incógnito/privado\n2. El navegador bloquea el almacenamiento local\n3. Estás abriendo archivos file:// directamente\n\nSOLUCIÓN: Usa un servidor web local o permite el almacenamiento local.');
+            return;
+          }
+          
+          // REDIRECCIÓN CON RETARDO Y MENSAJE
+          document.body.innerHTML = `
+            <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#fef3c7;">
+              <div style="background:white;padding:2rem;border-radius:0.5rem;border:4px solid #000;box-shadow:0 10px 25px rgba(0,0,0,0.2);text-align:center;max-width:400px;">
+                <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
+                <h2 style="font-size:1.5rem;font-weight:bold;margin-bottom:0.5rem;color:#000;">¡Login Exitoso!</h2>
+                <p style="color:#666;margin-bottom:1rem;">Redirigiendo al panel...</p>
+                <div style="background:#f3f4f6;padding:0.5rem;border-radius:0.25rem;font-family:monospace;font-size:0.75rem;word-break:break-all;">
+                  Token: ${verifyToken ? verifyToken.substring(0, 30) + '...' : 'NULO'}
+                </div>
+              </div>
+            </div>
+          `;
+          
+          setTimeout(() => {
+            window.location.href = 'admin.html';
+          }, 1000);
+          
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión con el servidor.\nAsegúrate de que el backend esté corriendo (npm run dev)');
+      }
+    });
+  </script>
+</body>
+</html>

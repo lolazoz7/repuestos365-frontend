@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Proveedor - Repuestos 365</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+
+  <!-- Auth Section -->
+  <div id="authSection" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-400 to-yellow-500 p-4">
+    <div class="bg-white p-8 rounded-lg border-4 border-black shadow-2xl max-w-md w-full">
+      <div class="text-center mb-6">
+        <img src="logo-carro.png" alt="Repuestos 365" class="h-16 mx-auto mb-4">
+        <h1 class="text-2xl font-bold text-black" id="authTitle">Panel de Proveedor</h1>
+        <p class="text-gray-600" id="authSubtitle">Inicia sesión para continuar</p>
+      </div>
+
+      <!-- Login -->
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold mb-1 text-black">Email</label>
+          <input type="email" id="loginEmail" required class="w-full border-2 border-black rounded px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-1 text-black">Contraseña</label>
+          <input type="password" id="loginPassword" required class="w-full border-2 border-black rounded px-3 py-2">
+        </div>
+        <button type="submit" class="w-full bg-black text-yellow-400 py-3 rounded-lg font-bold border-2 border-yellow-400 hover:bg-gray-800">
+          Iniciar Sesión
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿No tienes cuenta? <button type="button" onclick="toggleAuth('registro')" class="text-blue-600 font-bold underline">Regístrate aquí</button>
+        </p>
+      </form>
+
+      <!-- Registro -->
+      <form id="registroForm" class="space-y-3 hidden">
+        <h3 class="font-bold text-lg text-black border-b-2 border-black pb-2">Datos del Representante</h3>
+        <input type="text" id="regNombre" placeholder="Nombre completo *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="email" id="regEmail" placeholder="Correo electrónico *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="tel" id="regTelefono" placeholder="Teléfono *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="password" id="regPassword" placeholder="Contraseña *" required class="w-full border-2 border-black rounded px-3 py-2">
+        
+        <h3 class="font-bold text-lg text-black border-b-2 border-black pb-2 mt-4">Datos de la Tienda</h3>
+        <input type="text" id="regNombreTienda" placeholder="Nombre de la Tienda *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="text" id="regRif" placeholder="RIF (ej: J-12345678-9) *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="text" id="regZona" placeholder="Zonas (ej: Valencia, Naguanagua) *" required class="w-full border-2 border-black rounded px-3 py-2">
+        
+        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold border-2 border-green-800 hover:bg-green-700 mt-2">
+          Registrarme y Empezar
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿Ya tienes cuenta? <button type="button" onclick="toggleAuth('login')" class="text-blue-600 font-bold underline">Inicia sesión</button>
+        </p>
+      </form>
+
+      <div class="mt-6 p-4 bg-yellow-50 rounded border border-yellow-400" id="loginHint">
+        <p class="text-xs text-gray-700 font-bold mb-2">🔑 Datos de prueba:</p>
+        <p class="text-xs text-gray-600">Email: tienda@ejemplo.com</p>
+        <p class="text-xs text-gray-600">Contraseña: 123456</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div id="dashboardSection" class="hidden">
+    <header class="bg-black shadow-lg border-b-4 border-yellow-400">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="logo-carro.png" alt="Repuestos 365" class="h-10 w-auto">
+          <div>
+            <h1 class="text-xl font-bold text-yellow-400">Panel de Proveedor</h1>
+            <p id="proveedorNombre" class="text-xs text-gray-400"></p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <a href="index.html" class="text-yellow-400 hover:text-yellow-300 font-bold">
+            <i class="fas fa-home mr-2"></i>Inicio
+          </a>
+          <button onclick="logout()" class="text-yellow-400 hover:text-yellow-300 font-bold">
+            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="grid md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Total Repuestos</p>
+          <p class="text-4xl font-bold text-black" id="totalRepuestos">0</p>
+        </div>
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Ventas Totales</p>
+          <p class="text-4xl font-bold text-black" id="totalVentas">0</p>
+        </div>
+        <div class="bg-black p-6 rounded-lg border-4 border-yellow-400 shadow-lg">
+          <p class="text-sm font-bold text-yellow-400 mb-2">Ganancias</p>
+          <p class="text-4xl font-bold text-yellow-400" id="gananciasTotales">€0.00</p>
+        </div>
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Saldo Wallet</p>
+          <p class="text-4xl font-bold text-black" id="saldoWallet">€0.00</p>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex gap-2 border-b-4 border-black flex-wrap">
+          <button onclick="mostrarTab('repuestos', this)" class="tab-btn px-4 py-3 bg-black text-yellow-400 font-bold rounded-t-lg">
+            <i class="fas fa-box mr-2"></i>Mis Repuestos
+          </button>
+          <button onclick="mostrarTab('nuevo', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-plus mr-2"></i>Nuevo Repuesto
+          </button>
+          <button onclick="mostrarTab('importar', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-file-excel mr-2"></i>Importar Excel
+          </button>
+          <button onclick="mostrarTab('ordenes', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-shopping-cart mr-2"></i>Órdenes
+          </button>
+          <button onclick="mostrarTab('wallet', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-wallet mr-2"></i>Wallet
+          </button>
+        </div>
+      </div>
+
+      <div id="tabRepuestos" class="tab-content bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">📦 Mis Repuestos</h3>
+        <div id="listaRepuestos" class="space-y-4">
+          <p class="text-gray-600 text-center py-8">Cargando repuestos...</p>
+        </div>
+      </div>
+
+      <div id="tabNuevo" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4"> Agregar Nuevo Repuesto</h3>
+        <form id="formNuevoRepuesto" class="space-y-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Nombre *</label>
+              <input type="text" id="repuestoNombre" required class="w-full border-2 border-black rounded px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Marca</label>
+              <input type="text" id="repuestoMarca" class="w-full border-2 border-black rounded px-3 py-2">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-1 text-black">Descripción</label>
+            <textarea id="repuestoDescripcion" rows="3" class="w-full border-2 border-black rounded px-3 py-2"></textarea>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Modelo de Vehículo *</label>
+              <input type="text" id="repuestoModelo" required class="w-full border-2 border-black rounded px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Categoría *</label>
+              <select id="repuestoCategoria" required class="w-full border-2 border-black rounded px-3 py-2">
+                <option value="">Seleccionar...</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Precio (€) *</label>
+              <input type="number" step="0.01" id="repuestoPrecio" required class="w-full border-2 border-black rounded px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Stock *</label>
+              <input type="number" id="repuestoStock" required class="w-full border-2 border-black rounded px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-1 text-black">Estado</label>
+              <select id="repuestoEstado" class="w-full border-2 border-black rounded px-3 py-2">
+                <option value="nuevo">Nuevo</option>
+                <option value="usado">Usado</option>
+                <option value="remanufacturado">Remanufacturado</option>
+              </select>
+            </div>
+          </div>
+          <div class="border-t-4 border-black pt-4">
+            <label class="block text-sm font-bold mb-2 text-black">📸 Imágenes del Repuesto</label>
+            <p class="text-xs text-gray-600 mb-3">Sube hasta 5 imágenes (JPEG, PNG, WebP - Máx 5MB cada una)</p>
+            <div class="border-2 border-dashed border-black rounded-lg p-6 text-center bg-gray-50">
+              <input type="file" id="repuestoImagenes" multiple accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden" onchange="previewImagenes(this)">
+              <label for="repuestoImagenes" class="cursor-pointer">
+                <i class="fas fa-cloud-upload-alt text-4xl text-yellow-400 mb-2"></i>
+                <p class="font-bold text-black">Haz clic para seleccionar imágenes</p>
+              </label>
+            </div>
+            <div id="previewContainer" class="mt-4 hidden">
+              <p class="font-bold text-sm mb-2 text-black">Vista previa:</p>
+              <div id="previewGrid" class="grid grid-cols-2 md:grid-cols-5 gap-2"></div>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-black text-yellow-400 py-3 rounded-lg font-bold border-2 border-yellow-400 hover:bg-gray-800">
+            <i class="fas fa-save mr-2"></i>Guardar Repuesto
+          </button>
+        </form>
+      </div>
+
+      <div id="tabImportar" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4"> Importar Catálogo desde Excel</h3>
+        <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-6">
+          <h4 class="font-bold text-lg mb-3 text-black">📋 Instrucciones:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-800">
+            <li>Descarga la plantilla de ejemplo</li>
+            <li>Llena tu catálogo siguiendo el formato</li>
+            <li>Guarda el archivo en formato .xlsx</li>
+            <li>Sube el archivo aquí</li>
+          </ol>
+        </div>
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+          <a href="https://repuestos365-backend.onrender.com/api/proveedor/plantilla" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold text-center">
+            <i class="fas fa-download mr-2"></i>Descargar Plantilla Excel
+          </a>
+        </div>
+        <div class="border-4 border-dashed border-black rounded-lg p-8 text-center bg-gray-50">
+          <i class="fas fa-cloud-upload-alt text-6xl text-yellow-400 mb-4"></i>
+          <h4 class="text-xl font-bold mb-2 text-black">Sube tu archivo Excel</h4>
+          <form id="formImportarExcel" class="space-y-4">
+            <input type="file" id="archivoExcel" accept=".xlsx,.xls" required class="hidden">
+            <label for="archivoExcel" class="inline-block bg-black text-yellow-400 px-6 py-3 rounded-lg font-bold border-2 border-yellow-400 cursor-pointer hover:bg-gray-800">
+              <i class="fas fa-folder-open mr-2"></i>Seleccionar Archivo
+            </label>
+            <p id="nombreArchivo" class="text-sm text-gray-600"></p>
+            <button type="submit" id="btnImportar" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold border-2 border-green-800 text-lg hidden">
+              <i class="fas fa-upload mr-2"></i>Importar Catálogo
+            </button>
+          </form>
+          <div id="resultadoImportacion" class="hidden mt-6"></div>
+        </div>
+      </div>
+
+      <div id="tabOrdenes" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">🛒 Órdenes de Compra</h3>
+        <div id="listaOrdenes" class="overflow-x-auto">
+          <p class="text-gray-600 text-center py-8">Cargando órdenes...</p>
+        </div>
+      </div>
+
+      <div id="tabWallet" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">💰 Mi Wallet</h3>
+        <div id="infoWallet" class="space-y-4">
+          <p class="text-gray-600 text-center py-8">Cargando información...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://repuestos365-backend.onrender.com';
+    let proveedorActual = null;
+    let imagenesSeleccionadas = [];
+    let imagenesURL = [];
+
+    function toggleAuth(modo) {
+      if (modo === 'registro') {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registroForm').classList.remove('hidden');
+        document.getElementById('loginHint').classList.add('hidden');
+        document.getElementById('authTitle').textContent = 'Registro de Proveedor';
+        document.getElementById('authSubtitle').textContent = 'Completa los datos para registrarte';
+      } else {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('registroForm').classList.add('hidden');
+        document.getElementById('loginHint').classList.remove('hidden');
+        document.getElementById('authTitle').textContent = 'Panel de Proveedor';
+        document.getElementById('authSubtitle').textContent = 'Inicia sesión para continuar';
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API_URL}/api/proveedor/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          proveedorActual = data.proveedor;
+          localStorage.setItem('proveedorId', data.proveedor.id);
+          localStorage.setItem('proveedorNombre', data.usuario.nombre);
+          localStorage.setItem('proveedorToken', data.token);
+          mostrarDashboard(data.proveedor, data.usuario.nombre);
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    });
+
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        nombre: document.getElementById('regNombre').value,
+        email: document.getElementById('regEmail').value,
+        telefono: document.getElementById('regTelefono').value,
+        password: document.getElementById('regPassword').value,
+        nombreTienda: document.getElementById('regNombreTienda').value,
+        rif: document.getElementById('regRif').value,
+        zona: document.getElementById('regZona').value
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/api/proveedor/registro`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+
+        if (res.ok) {
+          alert('✅ ' + result.mensaje + '\n\nRedirigiendo al inicio de sesión...');
+          toggleAuth('login');
+          document.getElementById('registroForm').reset();
+          document.getElementById('loginEmail').value = data.email;
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    });
+
+    function mostrarDashboard(proveedor, nombre) {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.remove('hidden');
+      document.getElementById('proveedorNombre').textContent = nombre;
+      cargarDashboard(proveedor.id);
+      cargarCategorias();
+    }
+
+    async function cargarDashboard(proveedorId) {
+      try {
+        const token = localStorage.getItem('proveedorToken');
+        const res = await fetch(`${API_URL}/api/proveedor/dashboard/${proveedorId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        document.getElementById('totalRepuestos').textContent = data.proveedor._count.repuestos;
+        document.getElementById('totalVentas').textContent = data.totalVentas;
+        document.getElementById('gananciasTotales').textContent = `€${parseFloat(data.ventasTotales).toFixed(2)}`;
+        document.getElementById('saldoWallet').textContent = `€${parseFloat(data.proveedor.wallet.saldoDisponible).toFixed(2)}`;
+      } catch (error) {
+        console.error('Error cargando dashboard:', error);
+      }
+    }
+
+    async function cargarCategorias() {
+      try {
+        const res = await fetch(`${API_URL}/api/categorias`);
+        const categorias = await res.json();
+        const select = document.getElementById('repuestoCategoria');
+        select.innerHTML = '<option value="">Seleccionar...</option>';
+        categorias.forEach(cat => {
+          select.innerHTML += `<option value="${cat.id}">${cat.nombre}</option>`;
+        });
+      } catch (error) {
+        console.error('Error cargando categorías:', error);
+      }
+    }
+
+    async function cargarRepuestos() {
+      if (!proveedorActual) return;
+      try {
+        const token = localStorage.getItem('proveedorToken');
+        const res = await fetch(`${API_URL}/api/proveedor/${proveedorActual.id}/repuestos`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const repuestos = await res.json();
+        const lista = document.getElementById('listaRepuestos');
+        
+        if (repuestos.length === 0) {
+          lista.innerHTML = '<p class="text-gray-600 text-center py-8">No tienes repuestos registrados</p>';
+          return;
+        }
+
+        lista.innerHTML = repuestos.map(rep => `
+          <div class="border-2 border-black rounded-lg p-4 flex items-center gap-4">
+            <div class="w-24 h-24 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+              ${rep.imagenes && rep.imagenes[0] 
+                ? `<img src="${rep.imagenes[0].startsWith('http') ? rep.imagenes[0] : API_URL + rep.imagenes[0]}" class="w-full h-full object-cover">`
+                : '<span class="text-3xl text-gray-400">🔧</span>'
+              }
+            </div>
+            <div class="flex-1">
+              <h4 class="font-bold text-lg">${rep.nombre}</h4>
+              <p class="text-sm text-gray-600">${rep.marca || 'Sin marca'} · ${rep.modeloVehiculo}</p>
+              <p class="text-xs text-gray-500">Categoría: ${rep.categoria.nombre}</p>
+              <div class="flex gap-4 mt-2">
+                <span class="text-lg font-bold text-black">€${parseFloat(rep.precioEur).toFixed(2)}</span>
+                <span class="text-sm bg-yellow-400 px-2 py-1 rounded font-bold">Stock: ${rep.stock}</span>
+              </div>
+            </div>
+            <button onclick="editarStock('${rep.id}', ${rep.stock})" class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-2 rounded font-bold border-2 border-black">
+              <i class="fas fa-edit"></i>
+            </button>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando repuestos:', error);
+      }
+    }
+
+    function previewImagenes(input) {
+      const files = input.files;
+      if (!files || files.length === 0) return;
+      if (files.length > 5) {
+        alert('Máximo 5 imágenes permitidas');
+        input.value = '';
+        return;
+      }
+      imagenesSeleccionadas = [];
+      const previewGrid = document.getElementById('previewGrid');
+      const previewContainer = document.getElementById('previewContainer');
+      previewGrid.innerHTML = '';
+      
+      Array.from(files).forEach((file, index) => {
+        if (!file.type.match('image.*')) {
+          alert(`El archivo "${file.name}" no es una imagen válida`);
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`La imagen "${file.name}" excede 5MB`);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagenesSeleccionadas[index] = file;
+          const div = document.createElement('div');
+          div.className = 'relative border-2 border-black rounded overflow-hidden';
+          div.innerHTML = `
+            <img src="${e.target.result}" class="w-full h-24 object-cover">
+            <button type="button" onclick="this.parentElement.remove(); actualizarContadorImagenes()" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700">
+              <i class="fas fa-times"></i>
+            </button>
+          `;
+          previewGrid.appendChild(div);
+          if (previewGrid.children.length > 0) {
+            previewContainer.classList.remove('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function actualizarContadorImagenes() {
+      const count = document.getElementById('previewGrid').children.length;
+      if (count === 0) {
+        document.getElementById('previewContainer').classList.add('hidden');
+        document.getElementById('repuestoImagenes').value = '';
+      }
+    }
+
+    async function subirImagenesAlServidor() {
+      if (imagenesSeleccionadas.length === 0 && imagenesURL.length === 0) return [];
+      const token = localStorage.getItem('proveedorToken');
+      const formData = new FormData();
+      imagenesSeleccionadas.forEach(file => {
+        formData.append('imagenes', file);
+      });
+      try {
+        const res = await fetch(`${API_URL}/api/proveedor/subir-imagenes`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok) {
+          return [...data.imagenes, ...imagenesURL];
+        } else {
+          return imagenesURL;
+        }
+      } catch (error) {
+        return imagenesURL;
+      }
+    }
+
+    document.getElementById('formNuevoRepuesto').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!proveedorActual) return;
+      const todasLasImagenes = await subirImagenesAlServidor();
+      const repuestoData = {
+        proveedorId: proveedorActual.id,
+        categoriaId: document.getElementById('repuestoCategoria').value,
+        nombre: document.getElementById('repuestoNombre').value,
+        descripcion: document.getElementById('repuestoDescripcion').value,
+        marca: document.getElementById('repuestoMarca').value,
+        modeloVehiculo: document.getElementById('repuestoModelo').value,
+        precioEur: document.getElementById('repuestoPrecio').value,
+        stock: document.getElementById('repuestoStock').value,
+        estado: document.getElementById('repuestoEstado').value,
+        imagenes: todasLasImagenes
+      };
+      try {
+        const token = localStorage.getItem('proveedorToken');
+        const res = await fetch(`${API_URL}/api/proveedor/repuestos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(repuestoData)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert('✅ Repuesto creado exitosamente');
+          document.getElementById('formNuevoRepuesto').reset();
+          document.getElementById('previewContainer').classList.add('hidden');
+          document.getElementById('previewGrid').innerHTML = '';
+          imagenesSeleccionadas = [];
+          imagenesURL = [];
+          mostrarTab('repuestos');
+          cargarRepuestos();
+          cargarDashboard(proveedorActual.id);
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (error) {
+        alert('Error al crear el repuesto');
+      }
+    });
+
+    document.getElementById('archivoExcel').addEventListener('change', function(e) {
+      const archivo = e.target.files[0];
+      if (archivo) {
+        document.getElementById('nombreArchivo').textContent = '📄 ' + archivo.name;
+        document.getElementById('btnImportar').classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('formImportarExcel').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const archivo = document.getElementById('archivoExcel').files[0];
+      if (!archivo || !proveedorActual) return;
+      const btnImportar = document.getElementById('btnImportar');
+      const resultadoDiv = document.getElementById('resultadoImportacion');
+      btnImportar.disabled = true;
+      btnImportar.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Procesando...';
+      resultadoDiv.classList.add('hidden');
+      const formData = new FormData();
+      formData.append('archivo', archivo);
+      formData.append('proveedorId', proveedorActual.id);
+      try {
+        const token = localStorage.getItem('proveedorToken');
+        const res = await fetch(`${API_URL}/api/proveedor/importar-excel`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok) {
+          resultadoDiv.classList.remove('hidden');
+          resultadoDiv.innerHTML = `
+            <div class="bg-green-100 border-4 border-green-600 rounded-lg p-6">
+              <h4 class="text-xl font-bold text-green-800 mb-3">✅ Importación Completada</h4>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded border-2 border-green-600">
+                  <p class="text-sm text-gray-600">Repuestos importados:</p>
+                  <p class="text-3xl font-bold text-green-600">${data.exitosos}</p>
+                </div>
+                <div class="bg-white p-4 rounded border-2 border-red-600">
+                  <p class="text-sm text-gray-600">Errores:</p>
+                  <p class="text-3xl font-bold text-red-600">${data.errores}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          document.getElementById('archivoExcel').value = '';
+          document.getElementById('nombreArchivo').textContent = '';
+          document.getElementById('btnImportar').classList.add('hidden');
+          cargarRepuestos();
+          cargarDashboard(proveedorActual.id);
+        } else {
+          resultadoDiv.classList.remove('hidden');
+          resultadoDiv.innerHTML = `<div class="bg-red-100 border-4 border-red-600 rounded-lg p-6"><h4 class="text-xl font-bold text-red-800">❌ Error</h4><p class="text-red-700 mt-2">${data.error}</p></div>`;
+        }
+      } catch (error) {
+        resultadoDiv.classList.remove('hidden');
+        resultadoDiv.innerHTML = `<div class="bg-red-100 border-4 border-red-600 rounded-lg p-6"><h4 class="text-xl font-bold text-red-800">❌ Error</h4><p class="text-red-700 mt-2">${error.message}</p></div>`;
+      } finally {
+        btnImportar.disabled = false;
+        btnImportar.innerHTML = '<i class="fas fa-upload mr-2"></i>Importar Catálogo';
+      }
+    });
+
+    async function cargarOrdenes() {
+      if (!proveedorActual) return;
+      try {
+        const token = localStorage.getItem('proveedorToken');
+        const res = await fetch(`${API_URL}/api/proveedor/${proveedorActual.id}/ordenes`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const ordenes = await res.json();
+        const lista = document.getElementById('listaOrdenes');
+        if (ordenes.length === 0) {
+          lista.innerHTML = '<p class="text-gray-600 text-center py-8">No hay órdenes todavía</p>';
+          return;
+        }
+        let html = '<table class="w-full"><thead class="bg-black text-yellow-400"><tr>';
+        html += '<th class="px-4 py-3 text-left">Orden</th><th class="px-4 py-3 text-left">Cliente</th><th class="px-4 py-3 text-left">Repuesto</th><th class="px-4 py-3 text-left">Total</th><th class="px-4 py-3 text-left">Estado</th>';
+        html += '</tr></thead><tbody>';
+        ordenes.forEach(orden => {
+          html += `<tr class="border-b-2 border-gray-200">
+            <td class="px-4 py-3 text-sm font-mono">${orden.id.substring(0, 8)}...</td>
+            <td class="px-4 py-3"><div class="font-bold">${orden.clienteNombre}</div><div class="text-xs text-gray-600">${orden.clienteTelefono}</div></td>
+            <td class="px-4 py-3 text-sm">${orden.repuesto.nombre}</td>
+            <td class="px-4 py-3 font-bold">€${parseFloat(orden.netoProveedorEur).toFixed(2)}</td>
+            <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs font-bold bg-blue-100 text-blue-800">${orden.estado}</span></td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        lista.innerHTML = html;
+      } catch (error) {
+        console.error('Error cargando órdenes:', error);
+      }
+    }
+
+    async function cargarWallet() {
+      if (!proveedorActual) return;
+      try {
+        const token = localStorage.getItem('proveedorToken');
+        const res = await fetch(`${API_URL}/api/proveedor/${proveedorActual.id}/wallet`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const wallet = await res.json();
+        const info = document.getElementById('infoWallet');
+        info.innerHTML = `
+          <div class="grid md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-yellow-400 p-4 rounded-lg border-2 border-black">
+              <p class="text-sm font-bold text-black">Saldo Disponible</p>
+              <p class="text-2xl font-bold text-black">€${parseFloat(wallet.saldoDisponible).toFixed(2)}</p>
+            </div>
+            <div class="bg-yellow-400 p-4 rounded-lg border-2 border-black">
+              <p class="text-sm font-bold text-black">Saldo Pendiente</p>
+              <p class="text-2xl font-bold text-black">€${parseFloat(wallet.saldoPendiente).toFixed(2)}</p>
+            </div>
+            <div class="bg-black p-4 rounded-lg border-2 border-yellow-400">
+              <p class="text-sm font-bold text-yellow-400">Total Retirado</p>
+              <p class="text-2xl font-bold text-yellow-400">€${parseFloat(wallet.totalRetirado).toFixed(2)}</p>
+            </div>
+          </div>
+          <h4 class="font-bold text-lg mb-4">Últimos Movimientos</h4>
+          <div class="space-y-2">
+            ${wallet.movimientos && wallet.movimientos.length > 0 ? wallet.movimientos.map(mov => `
+              <div class="border-2 border-black rounded p-3 flex justify-between items-center">
+                <div>
+                  <p class="font-bold">${mov.tipo}</p>
+                  <p class="text-xs text-gray-600">${mov.descripcion}</p>
+                  <p class="text-xs text-gray-600">${new Date(mov.creadoEn).toLocaleString()}</p>
+                </div>
+                <div class="text-right">
+                  <p class="font-bold ${mov.tipo === 'INGRESO' ? 'text-green-600' : 'text-red-600'}">
+                    ${mov.tipo === 'INGRESO' ? '+' : '-'}€${parseFloat(mov.montoEur).toFixed(2)}
+                  </p>
+                  <p class="text-xs text-gray-600">Saldo: €${parseFloat(mov.saldoNuevo).toFixed(2)}</p>
+                </div>
+              </div>
+            `).join('') : '<p class="text-gray-600 text-center py-4">No hay movimientos todavía</p>'}
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error cargando wallet:', error);
+      }
+    }
+
+    function mostrarTab(tab, btnElement) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-black', 'text-yellow-400');
+        btn.classList.add('bg-yellow-400', 'text-black');
+      });
+      const tabName = 'tab' + tab.charAt(0).toUpperCase() + tab.slice(1);
+      document.getElementById(tabName).classList.remove('hidden');
+      if (btnElement) {
+        btnElement.classList.remove('bg-yellow-400', 'text-black');
+        btnElement.classList.add('bg-black', 'text-yellow-400');
+      }
+      if (tab === 'repuestos') cargarRepuestos();
+      if (tab === 'ordenes') cargarOrdenes();
+      if (tab === 'wallet') cargarWallet();
+    }
+
+    function editarStock(repuestoId, stockActual) {
+      const nuevoStock = prompt('Nuevo stock:', stockActual);
+      if (nuevoStock !== null && !isNaN(nuevoStock)) {
+        const token = localStorage.getItem('proveedorToken');
+        fetch(`${API_URL}/api/proveedor/repuestos/${repuestoId}/stock`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ stock: parseInt(nuevoStock) })
+        })
+        .then(res => {
+          if (res.ok) {
+            alert('Stock actualizado');
+            cargarRepuestos();
+          } else {
+            alert('Error al actualizar stock');
+          }
+        });
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('proveedorId');
+      localStorage.removeItem('proveedorNombre');
+      localStorage.removeItem('proveedorToken');
+      location.reload();
+    }
+
+    window.addEventListener('load', () => {
+      const proveedorId = localStorage.getItem('proveedorId');
+      const nombre = localStorage.getItem('proveedorNombre');
+      if (proveedorId && nombre) {
+        proveedorActual = { id: proveedorId };
+        mostrarDashboard({ id: proveedorId }, nombre);
+      }
+    });
+  </script>
+</body>
+</html>

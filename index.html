@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repuestos 365 - Valencia, Venezuela</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="logo.png">
+</head>
+<body class="bg-gray-50">
+
+  <header class="bg-white shadow-lg border-b-4 border-black sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="Repuestos 365" class="h-10 w-auto">
+        <div>
+          <h1 class="text-xl font-bold text-black">Repuestos 365</h1>
+          <p class="text-xs text-gray-700">Naguanagua · Valencia · San Diego</p>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-5">
+        <a href="index.html" class="text-black hover:text-yellow-600 font-bold"><i class="fas fa-home mr-1"></i>Inicio</a>
+        <a href="#repuestos" class="text-black hover:text-yellow-600 font-bold"><i class="fas fa-car mr-1"></i>Repuestos</a>
+        <a href="#como-funciona" class="text-black hover:text-yellow-600 font-bold"><i class="fas fa-info-circle mr-1"></i>Cómo Funciona</a>
+        <span id="badgeTasa" class="text-xs font-bold bg-black text-yellow-400 px-2 py-1 rounded border border-yellow-400" title="Tasa BCV del día">€1 = Bs --</span>
+        <button onclick="abrirCarrito()" class="relative text-black hover:text-yellow-600 font-bold">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span id="contadorCarrito" class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-black rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+        </button>
+        <button onclick="mostrarHistorial()" class="text-black hover:text-yellow-600 font-bold"><i class="fas fa-history mr-1"></i>Mis compras</button>
+        <a href="proveedor.html" class="bg-yellow-400 text-black px-4 py-2 rounded font-bold hover:bg-yellow-500 border-2 border-yellow-400"><i class="fas fa-store mr-1"></i>Soy Proveedor</a>
+        <a href="delivery.html" class="bg-yellow-400 text-black px-4 py-2 rounded font-bold hover:bg-yellow-500 border-2 border-yellow-400"><i class="fas fa-truck mr-1"></i>Soy Delivery</a>
+      </nav>
+      <div class="flex md:hidden items-center gap-4">
+        <button onclick="abrirCarrito()" class="relative text-black text-2xl">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="contadorCarritoMovil" class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-black rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+        </button>
+        <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="text-black text-2xl"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t-2 border-black">
+      <div class="px-4 py-3 space-y-3">
+        <a href="index.html" class="block text-black hover:text-yellow-600 font-bold"><i class="fas fa-home mr-2"></i>Inicio</a>
+        <a href="#repuestos" class="block text-black hover:text-yellow-600 font-bold"><i class="fas fa-car mr-2"></i>Repuestos</a>
+        <a href="#como-funciona" class="block text-black hover:text-yellow-600 font-bold"><i class="fas fa-info-circle mr-2"></i>Cómo Funciona</a>
+        <p id="badgeTasaMovil" class="text-xs font-bold text-gray-700">€1 = Bs --</p>
+        <button onclick="mostrarHistorial()" class="block w-full text-left text-black hover:text-yellow-600 font-bold"><i class="fas fa-history mr-2"></i>Mis compras</button>
+        <a href="proveedor.html" class="block bg-yellow-400 text-black px-4 py-2 rounded font-bold text-center"><i class="fas fa-store mr-1"></i>Soy Proveedor</a>
+        <a href="delivery.html" class="block bg-yellow-400 text-black px-4 py-2 rounded font-bold text-center"><i class="fas fa-truck mr-1"></i>Soy Delivery</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="bg-gradient-to-br from-yellow-400 to-yellow-500 py-16 border-b-4 border-black relative overflow-hidden">
+    <img src="hero-patron.png" alt="" onerror="this.style.display='none'" class="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-multiply pointer-events-none select-none">
+    <img src="hero-coche.png" alt="" onerror="this.style.display='none'" class="absolute -right-8 -bottom-6 w-[440px] max-w-[50vw] opacity-20 mix-blend-multiply pointer-events-none select-none" style="-webkit-mask-image:radial-gradient(ellipse 65% 65% at 50% 50%, black 55%, transparent 78%); mask-image:radial-gradient(ellipse 65% 65% at 50% 50%, black 55%, transparent 78%);">
+    <div class="relative max-w-7xl mx-auto px-4 text-center">
+      <h2 class="text-5xl font-bold text-black mb-4">Encuentra el repuesto exacto para tu vehículo</h2>
+      <p class="text-xl text-gray-800 mb-8">Conectamos proveedores verificados de Valencia con compradores en toda la región</p>
+      <div class="max-w-2xl mx-auto">
+        <input type="text" id="busquedaHero" placeholder="Buscar repuesto, marca o modelo..." class="w-full px-6 py-4 rounded-lg border-4 border-black text-lg shadow-lg" onkeypress="if(event.key === 'Enter') buscarRepuestos()">
+        <button onclick="buscarRepuestos()" class="mt-4 bg-black text-yellow-400 px-8 py-4 rounded-lg font-bold text-lg border-2 border-yellow-400 hover:bg-gray-800"><i class="fas fa-search mr-2"></i>Buscar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg border-4 border-black shadow-lg p-6">
+      <h3 class="text-2xl font-bold text-black mb-4"><i class="fas fa-filter mr-2"></i>Filtros</h3>
+      <div class="grid md:grid-cols-4 gap-4">
+        <div><label class="block text-sm font-bold mb-2 text-black">Categoría</label><select id="filtroCategoria" class="w-full border-2 border-black rounded px-3 py-2"><option value="">Todas</option></select></div>
+        <div><label class="block text-sm font-bold mb-2 text-black">Marca</label><select id="filtroMarca" class="w-full border-2 border-black rounded px-3 py-2"><option value="">Todas</option></select></div>
+        <div><label class="block text-sm font-bold mb-2 text-black">Precio mínimo (€)</label><input type="number" id="filtroPrecioMin" placeholder="0" class="w-full border-2 border-black rounded px-3 py-2"></div>
+        <div><label class="block text-sm font-bold mb-2 text-black">Precio máximo (€)</label><input type="number" id="filtroPrecioMax" placeholder="9999" class="w-full border-2 border-black rounded px-3 py-2"></div>
+      </div>
+      <div class="flex justify-between items-center mt-4">
+        <select id="filtroOrden" class="border-2 border-black rounded px-3 py-2">
+          <option value="recientes">Más recientes</option>
+          <option value="precio-asc">Precio: menor a mayor</option>
+          <option value="precio-desc">Precio: mayor a menor</option>
+          <option value="nombre">Nombre A-Z</option>
+        </select>
+        <button onclick="limpiarFiltros()" class="bg-black text-yellow-400 px-6 py-2 rounded font-bold border-2 border-yellow-400 hover:bg-gray-800"><i class="fas fa-eraser mr-2"></i>Limpiar filtros</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="repuestos" class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold text-black">Repuestos Disponibles</h2>
+      <p id="contadorRepuestos" class="text-gray-600">Cargando...</p>
+    </div>
+    <div id="gridRepuestos" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <p class="col-span-full text-center py-12 text-gray-600">Cargando repuestos...</p>
+    </div>
+  </section>
+
+  <section id="como-funciona" class="bg-yellow-400 py-16 border-t-4 border-black border-b-4 border-black">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-black text-center mb-12">¿Cómo funciona?</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg border-4 border-black shadow-lg text-center"><div class="text-6xl mb-4">🔍</div><h3 class="text-xl font-bold text-black mb-2">1. Busca tu repuesto</h3><p class="text-gray-700">Filtra por categoría, marca, modelo o precio.</p></div>
+        <div class="bg-white p-6 rounded-lg border-4 border-black shadow-lg text-center"><div class="text-6xl mb-4">💳</div><h3 class="text-xl font-bold text-black mb-2">2. Compra sin registro</h3><p class="text-gray-700">Paga con Pago Móvil, Zinli o Binance Pay.</p></div>
+        <div class="bg-white p-6 rounded-lg border-4 border-black shadow-lg text-center"><div class="text-6xl mb-4">🚚</div><h3 class="text-xl font-bold text-black mb-2">3. Recibe en tu puerta</h3><p class="text-gray-700">Elige delivery por solo €5 o retira en tienda.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-black text-yellow-400 py-12 border-t-4 border-yellow-400">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div><h4 class="font-bold text-lg mb-4">Repuestos 365</h4><p class="text-gray-400 text-sm">Marketplace líder de repuestos automotrices en Valencia.</p></div>
+        <div><h4 class="font-bold text-lg mb-4">Enlaces</h4><ul class="space-y-2 text-sm"><li><a href="index.html" class="text-gray-400 hover:text-yellow-400">Inicio</a></li><li><a href="#repuestos" class="text-gray-400 hover:text-yellow-400">Repuestos</a></li><li><a href="#como-funciona" class="text-gray-400 hover:text-yellow-400">Cómo Funciona</a></li></ul></div>
+        <div><h4 class="font-bold text-lg mb-4">Para Negocios</h4><ul class="space-y-2 text-sm"><li><a href="proveedor.html" class="text-gray-400 hover:text-yellow-400 font-bold"><i class="fas fa-store mr-1"></i>Soy Proveedor</a></li><li><a href="delivery.html" class="text-gray-400 hover:text-yellow-400 font-bold"><i class="fas fa-truck mr-1"></i>Soy Delivery</a></li></ul></div>
+        <div><h4 class="font-bold text-lg mb-4">Administración</h4><ul class="space-y-2 text-sm"><li><a href="admin-login.html" class="text-gray-400 hover:text-yellow-400"><i class="fas fa-user-shield mr-1"></i>Panel Admin</a></li></ul></div>
+      </div>
+      <div class="border-t-2 border-gray-800 pt-8 text-center text-sm text-gray-400"><p>&copy; 2026 Repuestos 365. Valencia, Carabobo, Venezuela 🇻</p></div>
+    </div>
+  </footer>
+
+  <div id="drawerCarrito" class="fixed inset-0 hidden" style="background:rgba(0,0,0,.6); z-index:60;">
+    <div class="absolute right-0 top-0 bottom-0 w-full md:w-[480px] bg-white shadow-2xl flex flex-col">
+      <div class="bg-black text-yellow-400 px-5 py-4 flex justify-between items-center">
+        <h3 class="font-black text-lg"><i class="fas fa-shopping-cart mr-2"></i>Tu carrito</h3>
+        <button onclick="cerrarCarrito()" class="text-white text-2xl font-bold">&times;</button>
+      </div>
+      <div id="contenidoCarrito" class="flex-1 overflow-y-auto p-5"></div>
+      <div id="footerCarrito" class="border-t-4 border-black p-5 bg-gray-50"></div>
+    </div>
+  </div>
+
+  <div id="modalCheckout" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4" style="z-index:70;">
+    <div class="bg-white rounded-lg border-4 border-black shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-2xl font-bold text-black"><i class="fas fa-truck mr-2"></i>Datos de envío</h3>
+          <button onclick="cerrarCheckout()" class="text-gray-600 hover:text-black text-2xl"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="resumenCheckout"></div>
+        <form id="formCheckout" class="space-y-4 mt-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div><label class="block text-sm font-bold mb-1">Nombre completo *</label><input type="text" id="clienteNombre" required class="w-full border-2 border-black rounded px-3 py-2"></div>
+            <div><label class="block text-sm font-bold mb-1">Teléfono *</label><input type="tel" id="clienteTelefono" required class="w-full border-2 border-black rounded px-3 py-2"></div>
+          </div>
+          <div><label class="block text-sm font-bold mb-1">Email (opcional)</label><input type="email" id="clienteEmail" class="w-full border-2 border-black rounded px-3 py-2"></div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div><label class="block text-sm font-bold mb-1">Zona *</label>
+              <select id="clienteZona" required class="w-full border-2 border-black rounded px-3 py-2">
+                <option value="">Seleccionar...</option>
+                <option value="Valencia">Valencia</option>
+                <option value="Naguanagua">Naguanagua</option>
+                <option value="San Diego">San Diego</option>
+                <option value="Guacara">Guacara</option>
+                <option value="Los Guayos">Los Guayos</option>
+              </select>
+            </div>
+            <div><label class="block text-sm font-bold mb-1">Dirección completa *</label><input type="text" id="clienteDireccion" required class="w-full border-2 border-black rounded px-3 py-2"></div>
+          </div>
+          <label class="flex items-center gap-2 pt-3 border-t-2 border-gray-200">
+            <input type="checkbox" id="usaDelivery" class="w-5 h-5" checked onchange="actualizarTotalCheckout()">
+            <span class="font-bold">Agregar delivery (€5.00)</span>
+          </label>
+          <div class="bg-black text-yellow-400 rounded p-4 border-2 border-yellow-400 mt-4">
+            <div id="lineasCheckout" class="space-y-1 text-sm mb-2"></div>
+            <div id="deliveryRowCheckout" class="flex justify-between text-sm"><span>Delivery:</span><span>€5.00</span></div>
+            <div class="flex justify-between text-xl font-bold border-t-2 border-yellow-400 pt-2 mt-2">
+              <span>Total:</span><span id="totalEurCheckout">€0.00</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-400 mt-1">
+              <span id="labelTasaCheckout">En Bolívares (tasa BCV):</span><span id="totalBsCheckout">Bs 0.00</span>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-black text-yellow-400 py-3 rounded-lg font-bold border-2 border-yellow-400 hover:bg-gray-800 text-lg">
+            <i class="fas fa-check-circle mr-2"></i>Continuar al pago
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalPago" class="fixed inset-0 hidden" style="background:rgba(0,0,0,.75); z-index:80;">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div class="bg-black text-yellow-400 px-5 py-4 flex justify-between items-center sticky top-0">
+          <h3 class="font-bold text-lg"><i class="fas fa-credit-card mr-2"></i>Pago de tu orden</h3>
+          <button onclick="cerrarModalPago()" class="text-white text-2xl font-bold">&times;</button>
+        </div>
+        <div class="p-5">
+          <div class="bg-yellow-400 rounded-lg p-3 text-center mb-4">
+            <p class="text-xs font-bold text-black">NÚMERO DE ORDEN</p>
+            <p id="pagoOrdenId" class="font-mono text-xs font-bold text-black break-all"></p>
+            <p class="text-2xl font-black text-black mt-1" id="pagoMonto"></p>
+          </div>
+          <p class="text-sm font-bold text-gray-700 mb-2">1. Elige tu método de pago:</p>
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            <button id="btnPagoMovil" onclick="elegirMetodo('pagomovil')" class="border-2 border-black rounded-lg py-2 font-bold text-sm bg-yellow-400">📱 PagoMóvil</button>
+            <button id="btnBinance" onclick="elegirMetodo('binance')" class="border-2 border-black rounded-lg py-2 font-bold text-sm bg-white">🟡 Binance</button>
+            <button id="btnZinli" onclick="elegirMetodo('zinli')" class="border-2 border-black rounded-lg py-2 font-bold text-sm bg-white">💜 Zinli</button>
+          </div>
+          <div id="panelPagomovil" class="border-2 border-black rounded-lg p-4 mb-4 bg-gray-50">
+            <p class="font-black text-center mb-2">📱 DATOS PAGO MÓVIL</p>
+            <p class="text-sm">Banco: <b>0102 - Banco de Venezuela</b></p>
+            <p class="text-sm">Teléfono: <b>0424-4960690</b> <button onclick="copiarTexto('04244960690')" class="text-blue-600 text-xs font-bold">📋</button></p>
+            <p class="text-sm">C.I / RIF: <b>20029377</b> <button onclick="copiarTexto('20029377')" class="text-blue-600 text-xs font-bold">📋</button></p>
+            <p class="text-sm">Titular: <b>JORGE APARICIO</b></p>
+            <p class="text-xs text-gray-600 mt-2">Transfiere el equivalente en Bs a la tasa del día.</p>
+          </div>
+          <div id="panelBinance" class="hidden border-2 border-black rounded-lg p-4 mb-4 bg-gray-50 text-center">
+            <p class="font-black mb-2">🟡 BINANCE PAY</p>
+            <img src="binance-qr.png" alt="QR Binance Pay" class="w-40 h-40 mx-auto mb-2" onerror="this.style.display='none'">
+            <p class="text-sm">UID: <b class="font-mono text-lg">27355807</b> <button onclick="copiarTexto('27355807')" class="text-blue-600 text-xs font-bold">📋</button></p>
+            <p class="text-xs text-gray-600 mt-2">En tu app Binance: Pagar → por ID/UID.</p>
+          </div>
+          <div id="panelZinli" class="hidden border-2 border-black rounded-lg p-4 mb-4 bg-gray-50 text-center">
+            <p class="font-black mb-2">💜 ZINLI</p>
+            <p class="text-sm">Correo Zinli:</p>
+            <p class="text-base font-mono font-bold mt-1">jorgeaparicio9377@gmail.com</p>
+            <button onclick="copiarTexto('jorgeaparicio9377@gmail.com')" class="mt-2 text-blue-600 text-xs font-bold">📋 Copiar correo</button>
+            <p class="text-xs text-gray-600 mt-2">Envía el monto exacto en USD a este correo.</p>
+          </div>
+          <p class="text-sm font-bold text-gray-700 mb-2">2. Último paso: envía la captura del pago</p>
+          <a id="btnWhatsAppPago" href="#" target="_blank" class="block w-full bg-green-500 hover:bg-green-600 text-white text-center font-black py-3 rounded-lg">
+            <i class="fab fa-whatsapp mr-1"></i> ENVIAR CAPTURA AL WHATSAPP
+          </a>
+          <p class="text-xs text-gray-500 text-center mt-2">Se abrirá WhatsApp con tu orden ya escrita. Solo adjunta la captura.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalResumen" class="fixed inset-0 hidden" style="background:rgba(0,0,0,.75); z-index:90;">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div class="bg-green-500 text-white px-5 py-4">
+          <h3 class="font-black text-xl"><i class="fas fa-check-circle mr-2"></i>Compra registrada</h3>
+          <p class="text-sm opacity-90">Tu pedido quedó guardado en tu dispositivo</p>
+        </div>
+        <div id="contenidoResumen" class="p-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalHistorial" class="fixed inset-0 hidden" style="background:rgba(0,0,0,.75); z-index:85;">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div class="bg-black text-yellow-400 px-5 py-4 flex justify-between items-center">
+          <h3 class="font-black text-lg"><i class="fas fa-history mr-2"></i>Mis compras</h3>
+          <button onclick="cerrarHistorial()" class="text-white text-2xl font-bold">&times;</button>
+        </div>
+        <div id="contenidoHistorial" class="p-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://repuestos365-backend.onrender.com';
+    const PRECIO_DELIVERY = 5.00;
+    let TASA_BS = 982.00;
+    let repuestosGlobales = [];
+
+    // ========== TASA BCV DINÁMICA ==========
+    function setTasa(t, fuente) {
+      TASA_BS = t;
+      const b1 = document.getElementById('badgeTasa');
+      const b2 = document.getElementById('badgeTasaMovil');
+      if (b1) b1.textContent = '€1 = Bs ' + t.toFixed(2);
+      if (b2) b2.textContent = '€1 = Bs ' + t.toFixed(2) + ' (' + fuente + ')';
+      if (repuestosGlobales.length) mostrarRepuestos(repuestosGlobales);
+      if (!document.getElementById('modalCheckout').classList.contains('hidden')) actualizarTotalCheckout();
+      console.log('💱 Tasa BCV aplicada:', t, fuente);
+    }
+    async function cargarTasaBCV() {
+      try {
+        const r = await fetch(API_URL + '/api/tasa');
+        const d = await r.json();
+        if (d && d.tasa > 0) { setTasa(parseFloat(d.tasa), d.fuente || 'BCV'); return; }
+      } catch (e) {}
+      try {
+        const r2 = await fetch('https://pydolarve.org/api/v1/dollar?page=bcv');
+        const d2 = await r2.json();
+        const t = parseFloat(d2 && d2.monitors && d2.monitors.eur ? d2.monitors.eur.price : 0);
+        if (t > 0) { setTasa(t, 'BCV'); return; }
+      } catch (e) {}
+      setTasa(42.50, 'respaldo');
+    }
+
+    // ========== CARRITO (sessionStorage) ==========
+    function getCarrito() { try { return JSON.parse(sessionStorage.getItem('carrito365') || '[]'); } catch (e) { return []; } }
+    function setCarrito(arr) { sessionStorage.setItem('carrito365', JSON.stringify(arr)); actualizarContadorCarrito(); }
+    function agregarAlCarrito(repuesto) {
+      const carrito = getCarrito();
+      const existe = carrito.find(i => i.id === repuesto.id);
+      if (existe) existe.cantidad++;
+      else carrito.push({ id: repuesto.id, nombre: repuesto.nombre, precioEur: parseFloat(repuesto.precioEur), marca: repuesto.marca, modeloVehiculo: repuesto.modeloVehiculo, imagen: repuesto.imagenes && repuesto.imagenes[0], tienda: repuesto.proveedor ? repuesto.proveedor.nombreTienda : '', cantidad: 1 });
+      setCarrito(carrito);
+      mostrarToast('🛒 Añadido al carrito');
+    }
+    function cambiarCantidad(id, delta) {
+      const carrito = getCarrito();
+      const item = carrito.find(i => i.id === id);
+      if (!item) return;
+      item.cantidad += delta;
+      if (item.cantidad <= 0) setCarrito(carrito.filter(i => i.id !== id));
+      else setCarrito(carrito);
+      renderCarrito();
+    }
+    function eliminarDelCarrito(id) { setCarrito(getCarrito().filter(i => i.id !== id)); renderCarrito(); }
+    function vaciarCarrito() { setCarrito([]); renderCarrito(); }
+    function actualizarContadorCarrito() {
+      const total = getCarrito().reduce((s, i) => s + i.cantidad, 0);
+      ['contadorCarrito', 'contadorCarritoMovil'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (total > 0) { el.textContent = total; el.classList.remove('hidden'); }
+        else el.classList.add('hidden');
+      });
+    }
+    function abrirCarrito() { renderCarrito(); document.getElementById('drawerCarrito').classList.remove('hidden'); }
+    function cerrarCarrito() { document.getElementById('drawerCarrito').classList.add('hidden'); }
+    function renderCarrito() {
+      const carrito = getCarrito();
+      const cont = document.getElementById('contenidoCarrito');
+      const foot = document.getElementById('footerCarrito');
+      if (carrito.length === 0) {
+        cont.innerHTML = '<div class="text-center py-12"><i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i><p class="text-gray-500 font-bold">Tu carrito está vacío</p><p class="text-sm text-gray-400 mt-2">Agrega repuestos tocando el botón Añadir</p></div>';
+        foot.innerHTML = '';
+        return;
+      }
+      let total = 0;
+      cont.innerHTML = carrito.map(i => {
+        const sub = i.precioEur * i.cantidad;
+        total += sub;
+        return '<div class="flex gap-3 border-b-2 border-gray-200 pb-3 mb-3">' +
+          '<div class="w-20 h-20 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center">' + (i.imagen ? '<img src="' + i.imagen + '" class="w-full h-full object-cover rounded">' : '<span class="text-3xl text-gray-400">🔧</span>') + '</div>' +
+          '<div class="flex-1 min-w-0"><p class="font-bold text-sm text-black truncate">' + i.nombre + '</p>' +
+          '<p class="text-xs text-gray-500">' + (i.marca || '') + (i.modeloVehiculo ? ' · ' + i.modeloVehiculo : '') + '</p>' +
+          '<p class="text-xs text-gray-600">' + i.tienda + '</p>' +
+          '<p class="text-xs text-gray-500">Bs ' + (sub * TASA_BS).toFixed(2) + '</p>' +
+          '<div class="flex items-center justify-between mt-1"><div class="flex items-center border-2 border-black rounded">' +
+          '<button onclick="cambiarCantidad(\'' + i.id + '\', -1)" class="w-7 h-7 bg-gray-100 hover:bg-gray-200 font-bold">-</button>' +
+          '<span class="w-8 text-center font-bold">' + i.cantidad + '</span>' +
+          '<button onclick="cambiarCantidad(\'' + i.id + '\', 1)" class="w-7 h-7 bg-gray-100 hover:bg-gray-200 font-bold">+</button></div>' +
+          '<span class="font-black text-black">€' + sub.toFixed(2) + '</span></div></div>' +
+          '<button onclick="eliminarDelCarrito(\'' + i.id + '\')" class="text-red-500 hover:text-red-700 text-lg self-start"><i class="fas fa-trash"></i></button></div>';
+      }).join('');
+      foot.innerHTML = '<div class="flex justify-between items-center mb-3"><span class="font-bold text-gray-700">Subtotal:</span><span class="text-2xl font-black text-black">€' + total.toFixed(2) + '</span></div>' +
+        '<p class="text-xs text-gray-500 mb-3 text-right">Bs ' + (total * TASA_BS).toFixed(2) + ' (tasa BCV ' + TASA_BS.toFixed(2) + ')</p>' +
+        '<div class="flex gap-2"><button onclick="vaciarCarrito()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-black py-2 rounded font-bold text-sm">Vaciar</button>' +
+        '<button onclick="irAlCheckout()" class="flex-[2] bg-black text-yellow-400 hover:bg-gray-800 py-3 rounded-lg font-bold border-2 border-yellow-400"><i class="fas fa-arrow-right mr-2"></i>Continuar</button></div>';
+    }
+    function mostrarToast(mensaje) {
+      const t = document.createElement('div');
+      t.className = 'fixed bottom-6 right-6 bg-black text-yellow-400 px-5 py-3 rounded-lg font-bold shadow-2xl border-2 border-yellow-400';
+      t.style.zIndex = '100';
+      t.textContent = mensaje;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2000);
+    }
+
+    // ========== CHECKOUT ==========
+    function irAlCheckout() {
+      const carrito = getCarrito();
+      if (carrito.length === 0) { alert('Tu carrito está vacío'); return; }
+      cerrarCarrito();
+      document.getElementById('resumenCheckout').innerHTML = '<div class="bg-yellow-50 border-2 border-yellow-400 rounded p-3 text-sm"><b>Artículos en tu carrito:</b><ul class="mt-2 space-y-1">' +
+        carrito.map(i => '<li>• ' + i.cantidad + '× ' + i.nombre + ' — €' + (i.precioEur * i.cantidad).toFixed(2) + ' (Bs ' + (i.precioEur * i.cantidad * TASA_BS).toFixed(2) + ')</li>').join('') + '</ul></div>';
+      actualizarTotalCheckout();
+      document.getElementById('modalCheckout').classList.remove('hidden');
+    }
+    function cerrarCheckout() { document.getElementById('modalCheckout').classList.add('hidden'); }
+    function actualizarTotalCheckout() {
+      const carrito = getCarrito();
+      const sub = carrito.reduce((s, i) => s + i.precioEur * i.cantidad, 0);
+      const usaD = document.getElementById('usaDelivery').checked;
+      const total = sub + (usaD ? PRECIO_DELIVERY : 0);
+      document.getElementById('lineasCheckout').innerHTML = carrito.map(i =>
+        '<div class="flex justify-between"><span>' + i.cantidad + '× ' + i.nombre.substring(0, 30) + (i.nombre.length > 30 ? '...' : '') + '</span><span>€' + (i.precioEur * i.cantidad).toFixed(2) + '</span></div>').join('');
+      document.getElementById('deliveryRowCheckout').style.display = usaD ? 'flex' : 'none';
+      document.getElementById('totalEurCheckout').textContent = '€' + total.toFixed(2);
+      document.getElementById('totalBsCheckout').textContent = 'Bs ' + (total * TASA_BS).toFixed(2);
+      document.getElementById('labelTasaCheckout').textContent = 'En Bolívares (tasa BCV ' + TASA_BS.toFixed(2) + '):';
+    }
+
+    document.getElementById('formCheckout').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const carrito = getCarrito();
+      const dataCliente = {
+        clienteNombre: document.getElementById('clienteNombre').value,
+        clienteTelefono: document.getElementById('clienteTelefono').value,
+        clienteEmail: document.getElementById('clienteEmail').value,
+        clienteZona: document.getElementById('clienteZona').value,
+        clienteDireccion: document.getElementById('clienteDireccion').value,
+        usaDelivery: document.getElementById('usaDelivery').checked
+      };
+      const ordenes = [];
+      for (const item of carrito) {
+        try {
+          const res = await fetch(API_URL + '/api/ordenes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.assign({}, dataCliente, { repuestoId: item.id, metodoPago: 'pendiente' }))
+          });
+          const r = await res.json();
+          if (res.ok) ordenes.push({ id: r.ordenId, totalEur: r.totalEur, item: item });
+        } catch (err) { console.error(err); }
+      }
+      if (ordenes.length === 0) { alert('Error creando las órdenes'); return; }
+      const totalEur = ordenes.reduce((s, o) => s + o.totalEur, 0);
+      const totalBs = totalEur * TASA_BS;
+      const idsOrdenes = ordenes.map(o => o.id).join(', ');
+      guardarEnHistorial({
+        fecha: new Date().toISOString(),
+        ordenes: ordenes,
+        totalEur: totalEur,
+        totalBs: totalBs,
+        tasa: TASA_BS,
+        cliente: dataCliente.clienteNombre,
+        items: carrito.map(i => ({ nombre: i.nombre, cantidad: i.cantidad, precio: i.precioEur }))
+      });
+      cerrarCheckout();
+      abrirModalPago(idsOrdenes, totalEur.toFixed(2), totalBs.toFixed(2));
+      vaciarCarrito();
+    });
+
+    // ========== MODAL DE PAGO ==========
+    let pagoActual = { ordenId: '', eur: 0, bs: 0, metodo: 'pagomovil' };
+    function abrirModalPago(ordenId, eur, bs) {
+      pagoActual = { ordenId: ordenId, eur: eur, bs: bs, metodo: 'pagomovil' };
+      document.getElementById('pagoOrdenId').textContent = ordenId;
+      document.getElementById('pagoMonto').textContent = '€' + eur + ' / Bs ' + bs;
+      elegirMetodo('pagomovil');
+      document.getElementById('modalPago').classList.remove('hidden');
+    }
+    function cerrarModalPago() { document.getElementById('modalPago').classList.add('hidden'); mostrarResumenPostPago(); }
+    function elegirMetodo(metodo) {
+      pagoActual.metodo = metodo;
+      document.getElementById('panelPagomovil').classList.toggle('hidden', metodo !== 'pagomovil');
+      document.getElementById('panelBinance').classList.toggle('hidden', metodo !== 'binance');
+      document.getElementById('panelZinli').classList.toggle('hidden', metodo !== 'zinli');
+      document.getElementById('btnPagoMovil').className = 'border-2 border-black rounded-lg py-2 font-bold text-sm ' + (metodo === 'pagomovil' ? 'bg-yellow-400' : 'bg-white');
+      document.getElementById('btnBinance').className = 'border-2 border-black rounded-lg py-2 font-bold text-sm ' + (metodo === 'binance' ? 'bg-yellow-400' : 'bg-white');
+      document.getElementById('btnZinli').className = 'border-2 border-black rounded-lg py-2 font-bold text-sm ' + (metodo === 'zinli' ? 'bg-yellow-400' : 'bg-white');
+      const nombreMetodo = metodo === 'pagomovil' ? 'PagoMóvil' : (metodo === 'binance' ? 'Binance Pay' : 'Zinli');
+      const texto = 'Hola Repuestos 365 👋 Ya pagué la(s) ORDEN(es) ' + pagoActual.ordenId + ' por ' + nombreMetodo + ' (Total: €' + pagoActual.eur + ' / Bs ' + pagoActual.bs + ' a tasa BCV ' + TASA_BS.toFixed(2) + '). Adjunto captura del pago.';
+      document.getElementById('btnWhatsAppPago').href = 'https://wa.me/584120332374?text=' + encodeURIComponent(texto);
+    }
+    function copiarTexto(t) { navigator.clipboard.writeText(t).then(() => mostrarToast('Copiado: ' + t)); }
+
+    // ========== HISTORIAL (localStorage) ==========
+    function getHistorial() { try { return JSON.parse(localStorage.getItem('historial365') || '[]'); } catch (e) { return []; } }
+    function guardarEnHistorial(compra) { const h = getHistorial(); h.unshift(compra); localStorage.setItem('historial365', JSON.stringify(h)); }
+    function mostrarResumenPostPago() {
+      const h = getHistorial();
+      const ultima = h[0];
+      if (!ultima) return;
+      document.getElementById('contenidoResumen').innerHTML =
+        '<div class="bg-yellow-50 border-2 border-yellow-400 rounded p-3 mb-4"><p class="text-xs font-bold text-gray-600">ORDEN(es)</p>' +
+        '<p class="font-mono text-xs break-all">' + ultima.ordenes.map(o => o.id).join(', ') + '</p>' +
+        '<p class="text-2xl font-black text-black mt-2">€' + ultima.totalEur.toFixed(2) + '</p>' +
+        '<p class="text-sm text-gray-600">Bs ' + ultima.totalBs.toFixed(2) + ' (tasa ' + ultima.tasa.toFixed(2) + ')</p></div>' +
+        '<h4 class="font-bold mb-2">Artículos:</h4><ul class="space-y-1 mb-4">' +
+        ultima.items.map(i => '<li class="text-sm border-b border-gray-200 pb-1">• ' + i.cantidad + '× ' + i.nombre + '</li>').join('') + '</ul>' +
+        '<div class="grid grid-cols-2 gap-2"><button onclick="cerrarResumen()" class="bg-black text-yellow-400 py-3 rounded font-bold border-2 border-yellow-400">Seguir comprando</button>' +
+        '<button onclick="cerrarResumen(); mostrarHistorial()" class="bg-yellow-400 text-black py-3 rounded font-bold border-2 border-black">Ver mi historial</button></div>';
+      document.getElementById('modalResumen').classList.remove('hidden');
+    }
+    function cerrarResumen() { document.getElementById('modalResumen').classList.add('hidden'); }
+    function mostrarHistorial() {
+      const h = getHistorial();
+      const c = document.getElementById('contenidoHistorial');
+      if (h.length === 0) {
+        c.innerHTML = '<div class="text-center py-12"><i class="fas fa-history text-6xl text-gray-300 mb-4"></i><p class="text-gray-500 font-bold">Aún no tienes compras registradas</p></div>';
+      } else {
+        c.innerHTML = h.map(c0 =>
+          '<div class="border-2 border-black rounded-lg p-4 mb-3"><div class="flex justify-between items-start mb-2"><div>' +
+          '<p class="text-xs text-gray-500">' + new Date(c0.fecha).toLocaleString('es-VE') + '</p>' +
+          '<p class="font-mono text-xs break-all">' + c0.ordenes.map(o => o.id).join(', ') + '</p></div>' +
+          '<span class="text-xl font-black text-black">€' + c0.totalEur.toFixed(2) + '</span></div>' +
+          '<p class="text-xs text-gray-500 mb-1">Bs ' + c0.totalBs.toFixed(2) + ' (tasa ' + (c0.tasa || 42.5).toFixed(2) + ')</p>' +
+          '<ul class="text-sm space-y-1 border-t-2 border-gray-100 pt-2">' + c0.items.map(i => '<li>• ' + i.cantidad + '× ' + i.nombre + '</li>').join('') + '</ul></div>'
+        ).join('') + '<button onclick="if(confirm(\'¿Borrar todo el historial?\')){localStorage.removeItem(\'historial365\');mostrarHistorial();}" class="w-full mt-4 bg-red-500 text-white py-2 rounded font-bold hover:bg-red-600">Borrar historial</button>';
+      }
+      document.getElementById('modalHistorial').classList.remove('hidden');
+    }
+    function cerrarHistorial() { document.getElementById('modalHistorial').classList.add('hidden'); }
+
+    // ========== CARGA DE DATOS ==========
+    window.addEventListener('load', () => {
+      cargarTasaBCV();
+      setInterval(cargarTasaBCV, 1800000);
+      cargarCategorias(); cargarMarcas(); cargarRepuestos(); actualizarContadorCarrito();
+    });
+    async function cargarCategorias() {
+      try {
+        const res = await fetch(API_URL + '/api/categorias');
+        const cats = await res.json();
+        const sel = document.getElementById('filtroCategoria');
+        cats.forEach(c => sel.innerHTML += '<option value="' + c.slug + '">' + c.nombre + '</option>');
+      } catch (e) { console.error(e); }
+    }
+    async function cargarMarcas() {
+      try {
+        const res = await fetch(API_URL + '/api/marcas');
+        const marcas = await res.json();
+        const sel = document.getElementById('filtroMarca');
+        marcas.forEach(m => sel.innerHTML += '<option value="' + m + '">' + m + '</option>');
+      } catch (e) { console.error(e); }
+    }
+    async function cargarRepuestos() {
+      try {
+        const c = document.getElementById('filtroCategoria').value;
+        const m = document.getElementById('filtroMarca').value;
+        const pmin = document.getElementById('filtroPrecioMin').value;
+        const pmax = document.getElementById('filtroPrecioMax').value;
+        const o = document.getElementById('filtroOrden').value;
+        const b = document.getElementById('busquedaHero') ? document.getElementById('busquedaHero').value : '';
+        let url = API_URL + '/api/repuestos?';
+        if (c) url += 'categoria=' + c + '&';
+        if (m) url += 'marca=' + m + '&';
+        if (pmin) url += 'precioMin=' + pmin + '&';
+        if (pmax) url += 'precioMax=' + pmax + '&';
+        if (b) url += 'busqueda=' + b + '&';
+        if (o) url += 'orden=' + o + '&';
+        const res = await fetch(url);
+        const reps = await res.json();
+        repuestosGlobales = reps;
+        document.getElementById('contadorRepuestos').textContent = reps.length + ' repuestos encontrados';
+        mostrarRepuestos(reps);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('gridRepuestos').innerHTML = '<div class="col-span-full text-center py-12"><p class="text-xl font-bold text-black">Error cargando repuestos</p></div>';
+      }
+    }
+    function mostrarRepuestos(reps) {
+      const g = document.getElementById('gridRepuestos');
+      if (reps.length === 0) { g.innerHTML = '<p class="col-span-full text-center py-12 text-gray-800 font-bold text-lg">No se encontraron repuestos</p>'; return; }
+      g.innerHTML = reps.map(r => {
+        const disp = r.proveedor ? r.proveedor.disponible : false;
+        const cls = disp ? 'bg-green-500' : 'bg-red-500';
+        const txt = disp ? 'Abierto' : 'Cerrado';
+        return '<div class="bg-white rounded-lg shadow hover:shadow-xl transition border-2 border-black overflow-hidden">' +
+          '<div class="h-48 bg-gray-100 flex items-center justify-center relative">' +
+          (r.imagenes && r.imagenes[0] ? '<img src="' + r.imagenes[0] + '" alt="' + r.nombre + '" class="w-full h-full object-cover">' : '<span class="text-6xl text-gray-400">🔧</span>') +
+          '<div class="absolute top-2 right-2 ' + cls + ' text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1"><i class="fas fa-clock"></i>' + txt + '</div>' +
+          (r.destacado ? '<span class="absolute top-2 left-2 bg-yellow-400 text-black px-2 py-1 rounded font-bold text-xs border-2 border-black">⭐ DESTACADO</span>' : '') +
+          '</div><div class="p-4"><h3 class="font-bold text-lg mb-1 text-black">' + r.nombre + '</h3>' +
+          '<p class="text-sm text-gray-800 mb-2">' + (r.marca ? r.marca + ' · ' : '') + r.modeloVehiculo + '</p>' +
+          '<p class="text-xs text-gray-600 mb-2"><i class="fas fa-tag mr-1"></i>' + r.categoria.nombre + '</p>' +
+          '<div class="flex items-center justify-between mb-1"><span class="text-2xl font-bold text-black">€' + parseFloat(r.precioEur).toFixed(2) + '</span>' +
+          '<span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded border border-black font-bold">Stock: ' + r.stock + '</span></div>' +
+          '<p class="text-sm text-gray-600 mb-2">Bs ' + (parseFloat(r.precioEur) * TASA_BS).toFixed(2) + ' <span class="text-xs text-gray-400">(tasa BCV ' + TASA_BS.toFixed(2) + ')</span></p>' +
+          '<div class="text-xs text-gray-600 mb-3 bg-gray-50 p-2 rounded border border-gray-200"><i class="fas fa-store mr-1"></i>' + (r.proveedor ? r.proveedor.nombreTienda : '') + '</div>' +
+          '<div class="flex gap-2"><button onclick=\'agregarAlCarrito(' + JSON.stringify(r).replace(/'/g, "&apos;") + ')\' class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-lg font-bold border-2 border-black"><i class="fas fa-cart-plus mr-1"></i>Añadir</button>' +
+          '<button onclick="comprarDirecto(\'' + r.id + '\')" class="flex-1 bg-black hover:bg-gray-800 text-yellow-400 py-2 rounded-lg font-bold border-2 border-yellow-400"><i class="fas fa-bolt mr-1"></i>Comprar</button></div></div></div>';
+      }).join('');
+    }
+    function comprarDirecto(id) {
+      const r = repuestosGlobales.find(x => x.id === id);
+      if (!r) return;
+      agregarAlCarrito(r);
+      abrirCarrito();
+    }
+    function buscarRepuestos() { cargarRepuestos(); }
+    function limpiarFiltros() {
+      ['filtroCategoria', 'filtroMarca', 'filtroPrecioMin', 'filtroPrecioMax'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('filtroOrden').value = 'recientes';
+      if (document.getElementById('busquedaHero')) document.getElementById('busquedaHero').value = '';
+      cargarRepuestos();
+    }
+    document.getElementById('filtroCategoria').addEventListener('change', cargarRepuestos);
+    document.getElementById('filtroMarca').addEventListener('change', cargarRepuestos);
+    document.getElementById('filtroPrecioMin').addEventListener('input', cargarRepuestos);
+    document.getElementById('filtroPrecioMax').addEventListener('input', cargarRepuestos);
+    document.getElementById('filtroOrden').addEventListener('change', cargarRepuestos);
+  </script>
+<script>
+// TASA REAL desde el navegador del cliente (las APIs bloquean datacenters, no casas)
+async function cargarTasaBCV() {
+  const fuentes = [
+    { url: 'https://dolarapi.com/v1/dolares/euro', parser: function(d){ return parseFloat(d.promedio); }, nombre: 'dolarapi' },
+    { url: 'https://ve.dolarapi.com/v1/dolares/euro', parser: function(d){ return parseFloat(d.promedio); }, nombre: 've-dolarapi' },
+    { url: 'https://pydolarve.org/api/v1/dollar?page=bcv', parser: function(d){ return parseFloat(d.monitors && d.monitors.eur ? d.monitors.eur.price : 0); }, nombre: 'pydolarve' }
+  ];
+  for (var i = 0; i < fuentes.length; i++) {
+    var f = fuentes[i];
+    try {
+      var r = await fetch(f.url);
+      if (!r.ok) continue;
+      var d = await r.json();
+      var t = f.parser(d);
+      if (t > 0) { setTasa(t, f.nombre); console.log('✅ Tasa real de ' + f.nombre + ': ' + t); return; }
+    } catch (e) { console.log('Fuente falló:', f.nombre); }
+  }
+  try {
+    var r2 = await fetch(API_URL + '/api/tasa');
+    var d2 = await r2.json();
+    if (d2 && d2.tasa > 0) { setTasa(parseFloat(d2.tasa), d2.fuente || 'BCV'); return; }
+  } catch (e) {}
+  setTasa(982.00, 'BCV-fijo');
+}
+</script>
+<script>
+// TASA REAL v2: fuentes con CORS amigable + proxy para pydolarve
+async function cargarTasaBCV() {
+  const fuentes = [
+    { nombre: 'BCV-pydolarve', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://pydolarve.org/api/v1/dollar?page=bcv'), parser: function(d){ return parseFloat(d && d.monitors && d.monitors.eur ? d.monitors.eur.price : 0); } },
+    { nombre: 'BCE-frankfurter', url: 'https://api.frankfurter.app/latest?from=EUR&to=VES', parser: function(d){ return parseFloat(d && d.rates ? d.rates.VES : 0); } },
+    { nombre: 'er-api', url: 'https://open.er-api.com/v6/latest/EUR', parser: function(d){ return parseFloat(d && d.rates ? d.rates.VES : 0); } },
+    { nombre: 'pydolarve-directo', url: 'https://pydolarve.org/api/v1/dollar?page=bcv', parser: function(d){ return parseFloat(d && d.monitors && d.monitors.eur ? d.monitors.eur.price : 0); } }
+  ];
+  for (var i = 0; i < fuentes.length; i++) {
+    var f = fuentes[i];
+    try {
+      var r = await fetch(f.url);
+      if (!r.ok) { console.log('⚠️ ' + f.nombre + ' HTTP ' + r.status); continue; }
+      var d = await r.json();
+      var t = f.parser(d);
+      if (t > 100) { setTasa(t, f.nombre); console.log('✅ TASA REAL: ' + t + ' (' + f.nombre + ')'); return; }
+      console.log('⚠️ ' + f.nombre + ' valor inválido');
+    } catch (e) { console.log('❌ Falló ' + f.nombre + ': ' + e.message); }
+  }
+  try {
+    var r2 = await fetch(API_URL + '/api/tasa');
+    var d2 = await r2.json();
+    if (d2 && d2.tasa > 0) { setTasa(parseFloat(d2.tasa), d2.fuente || 'BCV'); return; }
+  } catch (e) {}
+  setTasa(982.00, 'BCV-fijo');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Delivery - Repuestos 365</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+
+  <!-- Auth Section -->
+  <div id="authSection" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-400 to-yellow-500 p-4">
+    <div class="bg-white p-8 rounded-lg border-4 border-black shadow-2xl max-w-md w-full">
+      <div class="text-center mb-6">
+        <img src="logo-carro.png" alt="Repuestos 365" class="h-16 mx-auto mb-4">
+        <h1 class="text-2xl font-bold text-black" id="authTitle">Panel de Delivery</h1>
+        <p class="text-gray-600" id="authSubtitle">Inicia sesión para continuar</p>
+      </div>
+
+      <!-- Login -->
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold mb-1 text-black">Email</label>
+          <input type="email" id="loginEmail" required class="w-full border-2 border-black rounded px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-1 text-black">Contraseña</label>
+          <input type="password" id="loginPassword" required class="w-full border-2 border-black rounded px-3 py-2">
+        </div>
+        <button type="submit" class="w-full bg-black text-yellow-400 py-3 rounded-lg font-bold border-2 border-yellow-400 hover:bg-gray-800">
+          Iniciar Sesión
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿Eres una empresa de delivery nueva? <button type="button" onclick="toggleAuth('registro')" class="text-blue-600 font-bold underline">Regístrate aquí</button>
+        </p>
+      </form>
+
+      <!-- Registro -->
+      <form id="registroForm" class="space-y-3 hidden">
+        <h3 class="font-bold text-lg text-black border-b-2 border-black pb-2">Datos del Representante</h3>
+        <input type="text" id="regNombre" placeholder="Nombre completo *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="email" id="regEmail" placeholder="Correo electrónico *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="tel" id="regTelefono" placeholder="Teléfono *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="password" id="regPassword" placeholder="Contraseña *" required class="w-full border-2 border-black rounded px-3 py-2">
+        
+        <h3 class="font-bold text-lg text-black border-b-2 border-black pb-2 mt-4">Datos de la Empresa</h3>
+        <input type="text" id="regNombreEmpresa" placeholder="Nombre de la Empresa *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="text" id="regRif" placeholder="RIF (ej: J-12345678-9) *" required class="w-full border-2 border-black rounded px-3 py-2">
+        <input type="text" id="regZonas" placeholder="Zonas (ej: Valencia, Naguanagua) *" required class="w-full border-2 border-black rounded px-3 py-2">
+        
+        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold border-2 border-green-800 hover:bg-green-700 mt-2">
+          Registrarme y Empezar
+        </button>
+        <p class="text-center text-sm text-gray-600">
+          ¿Ya tienes cuenta? <button type="button" onclick="toggleAuth('login')" class="text-blue-600 font-bold underline">Inicia sesión</button>
+        </p>
+      </form>
+
+      <div class="mt-6 p-4 bg-yellow-50 rounded border border-yellow-400" id="loginHint">
+        <p class="text-xs text-gray-700 font-bold mb-2">🔑 Datos de prueba:</p>
+        <p class="text-xs text-gray-600">Email: delivery@repuestos365.com</p>
+        <p class="text-xs text-gray-600">Contraseña: 123456</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div id="dashboardSection" class="hidden">
+    <header class="bg-black shadow-lg border-b-4 border-yellow-400">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="logo-carro.png" alt="Repuestos 365" class="h-10 w-auto">
+          <div>
+            <h1 class="text-xl font-bold text-yellow-400">Panel de Delivery</h1>
+            <p id="empresaNombre" class="text-xs text-gray-400"></p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <a href="index.html" class="text-yellow-400 hover:text-yellow-300 font-bold">
+            <i class="fas fa-home mr-2"></i>Inicio
+          </a>
+          <button onclick="logout()" class="text-yellow-400 hover:text-yellow-300 font-bold">
+            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="grid md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Pendientes</p>
+          <p class="text-4xl font-bold text-black" id="pedidosPendientes">0</p>
+        </div>
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">En Camino</p>
+          <p class="text-4xl font-bold text-black" id="pedidosEnCurso">0</p>
+        </div>
+        <div class="bg-black p-6 rounded-lg border-4 border-yellow-400 shadow-lg">
+          <p class="text-sm font-bold text-yellow-400 mb-2">Completados</p>
+          <p class="text-4xl font-bold text-yellow-400" id="pedidosCompletados">0</p>
+        </div>
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Ganancias</p>
+          <p class="text-4xl font-bold text-black" id="gananciasTotales">€0.00</p>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex gap-2 border-b-4 border-black flex-wrap">
+          <button onclick="mostrarTab('disponibles', this)" class="tab-btn px-4 py-3 bg-black text-yellow-400 font-bold rounded-t-lg">
+            <i class="fas fa-clipboard-list mr-2"></i>Pedidos Disponibles
+          </button>
+          <button onclick="mostrarTab('encurso', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-truck mr-2"></i>En Camino
+          </button>
+          <button onclick="mostrarTab('completados', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-check-circle mr-2"></i>Completados
+          </button>
+          <button onclick="mostrarTab('wallet', this)" class="tab-btn px-4 py-3 bg-yellow-400 text-black font-bold rounded-t-lg hover:bg-yellow-500">
+            <i class="fas fa-wallet mr-2"></i>Wallet
+          </button>
+        </div>
+      </div>
+
+      <div id="tabDisponibles" class="tab-content bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4"> Pedidos Disponibles para Aceptar</h3>
+        <div id="listaDisponibles" class="space-y-4">
+          <p class="text-gray-600 text-center py-8">Cargando pedidos...</p>
+        </div>
+      </div>
+
+      <div id="tabEncurso" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">🚚 Pedidos en Camino</h3>
+        <div id="listaEncurso" class="space-y-4">
+          <p class="text-gray-600 text-center py-8">Cargando pedidos...</p>
+        </div>
+      </div>
+
+      <div id="tabCompletados" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">✅ Pedidos Completados</h3>
+        <div id="listaCompletados" class="space-y-4">
+          <p class="text-gray-600 text-center py-8">Cargando pedidos...</p>
+        </div>
+      </div>
+
+      <div id="tabWallet" class="tab-content hidden bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">💰 Mi Wallet</h3>
+        <div id="infoWallet" class="space-y-4">
+          <p class="text-gray-600 text-center py-8">Cargando información...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://repuestos365-backend.onrender.com';
+    let empresaActual = null;
+
+    function toggleAuth(modo) {
+      if (modo === 'registro') {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registroForm').classList.remove('hidden');
+        document.getElementById('loginHint').classList.add('hidden');
+        document.getElementById('authTitle').textContent = 'Registro de Delivery';
+        document.getElementById('authSubtitle').textContent = 'Completa los datos para registrarte';
+      } else {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('registroForm').classList.add('hidden');
+        document.getElementById('loginHint').classList.remove('hidden');
+        document.getElementById('authTitle').textContent = 'Panel de Delivery';
+        document.getElementById('authSubtitle').textContent = 'Inicia sesión para continuar';
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API_URL}/api/delivery/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          empresaActual = data.empresa;
+          localStorage.setItem('empresaId', data.empresa.id);
+          localStorage.setItem('empresaNombre', data.empresa.nombreEmpresa);
+          localStorage.setItem('deliveryToken', data.token);
+          mostrarDashboard(data.empresa);
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    });
+
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        nombre: document.getElementById('regNombre').value,
+        email: document.getElementById('regEmail').value,
+        telefono: document.getElementById('regTelefono').value,
+        password: document.getElementById('regPassword').value,
+        nombreEmpresa: document.getElementById('regNombreEmpresa').value,
+        rif: document.getElementById('regRif').value,
+        zonas: document.getElementById('regZonas').value
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/api/delivery/registro`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+
+        if (res.ok) {
+          alert('✅ ' + result.mensaje + '\n\nRedirigiendo al inicio de sesión...');
+          toggleAuth('login');
+          document.getElementById('registroForm').reset();
+          document.getElementById('loginEmail').value = data.email;
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    });
+
+    function mostrarDashboard(empresa) {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.remove('hidden');
+      document.getElementById('empresaNombre').textContent = empresa.nombreEmpresa;
+      cargarDashboard(empresa.id);
+    }
+
+    async function cargarDashboard(empresaId) {
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/dashboard/${empresaId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        document.getElementById('pedidosPendientes').textContent = data.pedidosPendientes;
+        document.getElementById('pedidosEnCurso').textContent = data.pedidosEnCurso;
+        document.getElementById('pedidosCompletados').textContent = data.pedidosCompletados;
+        document.getElementById('gananciasTotales').textContent = `€${parseFloat(data.gananciasTotales).toFixed(2)}`;
+      } catch (error) {
+        console.error('Error cargando dashboard:', error);
+      }
+    }
+
+    async function cargarPedidosDisponibles() {
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/pedidos-disponibles`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const pedidos = await res.json();
+        const lista = document.getElementById('listaDisponibles');
+        
+        if (pedidos.length === 0) {
+          lista.innerHTML = '<p class="text-gray-600 text-center py-8">No hay pedidos disponibles</p>';
+          return;
+        }
+
+        lista.innerHTML = pedidos.map(pedido => `
+          <div class="border-2 border-black rounded-lg p-4 bg-yellow-50">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h4 class="font-bold text-lg">${pedido.orden.repuesto.nombre}</h4>
+                <p class="text-sm text-gray-600">Proveedor: ${pedido.orden.proveedor.nombreTienda}</p>
+              </div>
+              <span class="bg-yellow-400 text-black px-3 py-1 rounded font-bold text-sm">€${parseFloat(pedido.costoFijoEur).toFixed(2)}</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p class="text-xs text-gray-600 font-bold">📍 Origen</p>
+                <p class="text-sm">${pedido.direccionOrigen}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-600 font-bold">🏠 Destino</p>
+                <p class="text-sm">${pedido.direccionDestino}</p>
+                <p class="text-xs text-gray-500">Zona: ${pedido.zonaDestino}</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="aceptarPedido('${pedido.id}')" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-bold border-2 border-green-800">
+                <i class="fas fa-check mr-2"></i>Aceptar
+              </button>
+              <button onclick="rechazarPedido('${pedido.id}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-bold border-2 border-red-800">
+                <i class="fas fa-times mr-2"></i>Rechazar
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando pedidos:', error);
+      }
+    }
+
+    async function aceptarPedido(pedidoId) {
+      if (!confirm('¿Aceptar este pedido?')) return;
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/pedidos/${pedidoId}/aceptar`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          alert('✅ Pedido aceptado');
+          cargarPedidosDisponibles();
+          cargarPedidosEnCurso();
+          cargarDashboard(empresaActual.id);
+        } else {
+          alert('Error al aceptar pedido');
+        }
+      } catch (error) {
+        alert('Error al aceptar pedido');
+      }
+    }
+
+    async function rechazarPedido(pedidoId) {
+      if (!confirm('¿Rechazar este pedido?')) return;
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/pedidos/${pedidoId}/rechazar`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          alert('Pedido rechazado');
+          cargarPedidosDisponibles();
+          cargarDashboard(empresaActual.id);
+        } else {
+          alert('Error al rechazar pedido');
+        }
+      } catch (error) {
+        alert('Error al rechazar pedido');
+      }
+    }
+
+    async function cargarPedidosEnCurso() {
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/${empresaActual.id}/pedidos?estado=EN_CAMINO`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const pedidos = await res.json();
+        const lista = document.getElementById('listaEncurso');
+        
+        if (pedidos.length === 0) {
+          lista.innerHTML = '<p class="text-gray-600 text-center py-8">No hay pedidos en camino</p>';
+          return;
+        }
+
+        lista.innerHTML = pedidos.map(pedido => `
+          <div class="border-2 border-black rounded-lg p-4 bg-blue-50">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h4 class="font-bold text-lg">${pedido.orden.repuesto.nombre}</h4>
+                <p class="text-sm text-gray-600">Proveedor: ${pedido.orden.proveedor.nombreTienda}</p>
+              </div>
+              <span class="bg-blue-400 text-black px-3 py-1 rounded font-bold text-sm">EN CAMINO</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p class="text-xs text-gray-600 font-bold">📍 Origen</p>
+                <p class="text-sm">${pedido.direccionOrigen}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-600 font-bold">🏠 Destino</p>
+                <p class="text-sm">${pedido.direccionDestino}</p>
+                <p class="text-xs text-gray-500">Zona: ${pedido.zonaDestino}</p>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded border-2 border-black mb-4">
+              <p class="text-xs text-gray-600 font-bold"> Cliente</p>
+              <p class="text-sm font-bold">${pedido.orden.clienteNombre}</p>
+              <p class="text-xs text-gray-600">📞 ${pedido.orden.clienteTelefono}</p>
+            </div>
+            <button onclick="marcarEntregado('${pedido.id}')" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded font-bold border-2 border-green-800">
+              <i class="fas fa-check-circle mr-2"></i>Marcar como Entregado
+            </button>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando pedidos en curso:', error);
+      }
+    }
+
+    async function marcarEntregado(pedidoId) {
+      if (!confirm('¿Confirmar que entregaste este pedido?')) return;
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/pedidos/${pedidoId}/entregar`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          alert('✅ Pedido entregado exitosamente');
+          cargarPedidosEnCurso();
+          cargarPedidosCompletados();
+          cargarDashboard(empresaActual.id);
+        } else {
+          alert('Error al marcar como entregado');
+        }
+      } catch (error) {
+        alert('Error al marcar como entregado');
+      }
+    }
+
+    async function cargarPedidosCompletados() {
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/${empresaActual.id}/pedidos?estado=ENTREGADO`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const pedidos = await res.json();
+        const lista = document.getElementById('listaCompletados');
+        
+        if (pedidos.length === 0) {
+          lista.innerHTML = '<p class="text-gray-600 text-center py-8">No hay pedidos completados</p>';
+          return;
+        }
+
+        lista.innerHTML = pedidos.map(pedido => `
+          <div class="border-2 border-black rounded-lg p-4 bg-green-50">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h4 class="font-bold text-lg">${pedido.orden.repuesto.nombre}</h4>
+                <p class="text-sm text-gray-600">Proveedor: ${pedido.orden.proveedor.nombreTienda}</p>
+              </div>
+              <span class="bg-green-400 text-black px-3 py-1 rounded font-bold text-sm">ENTREGADO</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-xs text-gray-600 font-bold">🏠 Destino</p>
+                <p class="text-sm">${pedido.direccionDestino}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-600 font-bold">💰 Ganancia</p>
+                <p class="text-lg font-bold text-green-600">€${parseFloat(pedido.netoEmpresaEur).toFixed(2)}</p>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Entregado: ${new Date(pedido.fechaEntrega).toLocaleString()}</p>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando pedidos completados:', error);
+      }
+    }
+
+    async function cargarWallet() {
+      try {
+        const token = localStorage.getItem('deliveryToken');
+        const res = await fetch(`${API_URL}/api/delivery/${empresaActual.id}/wallet`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const wallet = await res.json();
+        const info = document.getElementById('infoWallet');
+        
+        info.innerHTML = `
+          <div class="grid md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-yellow-400 p-4 rounded-lg border-2 border-black">
+              <p class="text-sm font-bold text-black">Saldo Disponible</p>
+              <p class="text-2xl font-bold text-black">€${parseFloat(wallet.saldoDisponible).toFixed(2)}</p>
+            </div>
+            <div class="bg-yellow-400 p-4 rounded-lg border-2 border-black">
+              <p class="text-sm font-bold text-black">Saldo Pendiente</p>
+              <p class="text-2xl font-bold text-black">€${parseFloat(wallet.saldoPendiente).toFixed(2)}</p>
+            </div>
+            <div class="bg-black p-4 rounded-lg border-2 border-yellow-400">
+              <p class="text-sm font-bold text-yellow-400">Total Retirado</p>
+              <p class="text-2xl font-bold text-yellow-400">€${parseFloat(wallet.totalRetirado).toFixed(2)}</p>
+            </div>
+          </div>
+          <h4 class="font-bold text-lg mb-4">Últimos Movimientos</h4>
+          <div class="space-y-2">
+            ${wallet.movimientos && wallet.movimientos.length > 0 ? wallet.movimientos.map(mov => `
+              <div class="border-2 border-black rounded p-3 flex justify-between items-center">
+                <div>
+                  <p class="font-bold">${mov.tipo}</p>
+                  <p class="text-xs text-gray-600">${mov.descripcion}</p>
+                  <p class="text-xs text-gray-600">${new Date(mov.creadoEn).toLocaleString()}</p>
+                </div>
+                <div class="text-right">
+                  <p class="font-bold ${mov.tipo === 'INGRESO' ? 'text-green-600' : 'text-red-600'}">
+                    ${mov.tipo === 'INGRESO' ? '+' : '-'}€${parseFloat(mov.montoEur).toFixed(2)}
+                  </p>
+                  <p class="text-xs text-gray-600">Saldo: €${parseFloat(mov.saldoNuevo).toFixed(2)}</p>
+                </div>
+              </div>
+            `).join('') : '<p class="text-gray-600 text-center py-4">No hay movimientos todavía</p>'}
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error cargando wallet:', error);
+      }
+    }
+
+    function mostrarTab(tab, btnElement) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-black', 'text-yellow-400');
+        btn.classList.add('bg-yellow-400', 'text-black');
+      });
+      const tabName = 'tab' + tab.charAt(0).toUpperCase() + tab.slice(1);
+      document.getElementById(tabName).classList.remove('hidden');
+      if (btnElement) {
+        btnElement.classList.remove('bg-yellow-400', 'text-black');
+        btnElement.classList.add('bg-black', 'text-yellow-400');
+      }
+      if (tab === 'disponibles') cargarPedidosDisponibles();
+      if (tab === 'encurso') cargarPedidosEnCurso();
+      if (tab === 'completados') cargarPedidosCompletados();
+      if (tab === 'wallet') cargarWallet();
+    }
+
+    function logout() {
+      localStorage.removeItem('empresaId');
+      localStorage.removeItem('empresaNombre');
+      localStorage.removeItem('deliveryToken');
+      location.reload();
+    }
+
+    window.addEventListener('load', () => {
+      const empresaId = localStorage.getItem('empresaId');
+      const nombre = localStorage.getItem('empresaNombre');
+      if (empresaId && nombre) {
+        empresaActual = { id: empresaId, nombreEmpresa: nombre };
+        mostrarDashboard({ id: empresaId, nombreEmpresa: nombre });
+      }
+    });
+  </script>
+</body>
+</html>

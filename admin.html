@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - Repuestos 365</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="logo.png">
+</head>
+<body class="bg-gray-100">
+
+  <div id="dashboardContent" class="hidden">
+    <header class="bg-black shadow-lg border-b-4 border-yellow-400">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="logo.png" alt="Repuestos 365" class="h-10 w-auto rounded">
+          <div>
+            <h1 class="text-xl font-bold text-yellow-400">Panel de Administración</h1>
+            <p id="adminNombre" class="text-xs text-gray-400"></p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <a href="index.html" class="text-yellow-400 hover:text-yellow-300 font-bold">
+            <i class="fas fa-home mr-2"></i>Inicio
+          </a>
+          <button onclick="logout()" class="text-yellow-400 hover:text-yellow-300 font-bold">
+            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <h2 class="text-3xl font-bold text-black mb-6">📊 Dashboard</h2>
+
+      <div class="grid md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Órdenes Totales</p>
+          <p class="text-4xl font-bold text-black" id="totalOrdenes">Cargando...</p>
+        </div>
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Órdenes Hoy</p>
+          <p class="text-4xl font-bold text-black" id="ordenesHoy">Cargando...</p>
+        </div>
+        <div class="bg-black p-6 rounded-lg border-4 border-yellow-400 shadow-lg">
+          <p class="text-sm font-bold text-yellow-400 mb-2">Ganancias Totales</p>
+          <p class="text-4xl font-bold text-yellow-400" id="gananciasTotales">€0.00</p>
+        </div>
+        <div class="bg-yellow-400 p-6 rounded-lg border-4 border-black shadow-lg">
+          <p class="text-sm font-bold text-black mb-2">Proveedores</p>
+          <p class="text-4xl font-bold text-black" id="totalProveedores">Cargando...</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg border-4 border-black shadow-lg p-6 mb-8">
+        <h3 class="text-2xl font-bold text-black mb-4">🛒 Órdenes Recientes</h3>
+        <div id="tablaOrdenes" class="overflow-x-auto">
+          <p class="text-gray-600 text-center py-8">Cargando órdenes...</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg border-4 border-black shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-black mb-4">🏪 Proveedores Registrados</h3>
+        <div id="tablaProveedores" class="overflow-x-auto">
+          <p class="text-gray-600 text-center py-8">Cargando proveedores...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://repuestos365-backend.onrender.com';
+
+    window.addEventListener('load', async () => {
+      const token = localStorage.getItem('adminToken');
+      const nombre = localStorage.getItem('adminNombre');
+
+      if (!token) {
+        window.location.href = 'admin-login.html';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/admin/dashboard`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminNombre');
+          window.location.href = 'admin-login.html';
+          return;
+        }
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        document.getElementById('dashboardContent').classList.remove('hidden');
+        document.getElementById('adminNombre').textContent = nombre || 'Administrador';
+        document.getElementById('totalOrdenes').textContent = data.totalOrdenes || 0;
+        document.getElementById('ordenesHoy').textContent = data.ordenesHoy || 0;
+        document.getElementById('gananciasTotales').textContent = `€${parseFloat(data.gananciasTotales || 0).toFixed(2)}`;
+        document.getElementById('totalProveedores').textContent = `${data.proveedoresVerificados || 0}/${data.totalProveedores || 0}`;
+
+        await cargarOrdenes(token);
+        await cargarProveedores(token);
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    async function cargarOrdenes(token) {
+      try {
+        const res = await fetch(`${API_URL}/api/admin/ordenes`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+
+        const ordenes = await res.json();
+        const tabla = document.getElementById('tablaOrdenes');
+
+        if (ordenes.length === 0) {
+          tabla.innerHTML = '<p class="text-gray-600 text-center py-8">No hay órdenes todavía</p>';
+          return;
+        }
+
+        let html = '<table class="w-full"><thead class="bg-black text-yellow-400"><tr>';
+        html += '<th class="px-4 py-3 text-left">ID</th>';
+        html += '<th class="px-4 py-3 text-left">Cliente</th>';
+        html += '<th class="px-4 py-3 text-left">Repuesto</th>';
+        html += '<th class="px-4 py-3 text-left">Total</th>';
+        html += '<th class="px-4 py-3 text-left">Estado</th>';
+        html += '<th class="px-4 py-3 text-left">Acciones</th>';
+        html += '</tr></thead><tbody>';
+
+        ordenes.forEach(orden => {
+          const estadoClass = orden.pagoVerificado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+          const estadoText = orden.pagoVerificado ? '✅ Pagado' : '⏳ Pendiente';
+          const acciones = orden.pagoVerificado
+            ? '<span class="text-green-600 text-xs font-bold">✓ Verificado</span>'
+            : `<button onclick="confirmarPago('${orden.id}')" class="bg-black text-yellow-400 px-3 py-1 rounded text-xs font-bold hover:bg-gray-800">Confirmar</button> <button onclick="eliminarOrden('${orden.id}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold border border-red-800"><i class="fas fa-trash mr-1"></i>Eliminar</button>`;
+
+          html += `<tr class="border-b-2 border-gray-200 hover:bg-yellow-50">
+            <td class="px-4 py-3 text-sm font-mono">${orden.id.substring(0, 8)}...</td>
+            <td class="px-4 py-3"><div class="font-bold">${orden.clienteNombre}</div><div class="text-xs text-gray-600">${orden.clienteTelefono}</div></td>
+            <td class="px-4 py-3 text-sm">${orden.repuesto.nombre}</td>
+            <td class="px-4 py-3 font-bold">€${parseFloat(orden.totalClienteEur).toFixed(2)}</td>
+            <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs font-bold ${estadoClass}">${estadoText}</span></td>
+            <td class="px-4 py-3">${acciones}</td>
+          </tr>`;
+        });
+
+        html += '</tbody></table>';
+        tabla.innerHTML = html;
+      } catch (error) {
+        console.error('Error cargando órdenes:', error);
+      }
+    }
+
+    async function confirmarPago(ordenId) {
+      if (!confirm('¿Confirmar que recibiste el pago de esta orden?')) return;
+
+      const token = localStorage.getItem('adminToken');
+
+      try {
+        const res = await fetch(`${API_URL}/api/admin/ordenes/${ordenId}/confirmar`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+          alert('✅ Pago confirmado');
+          await cargarOrdenes(token);
+        } else {
+          alert('Error al confirmar pago');
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    }
+
+    async function eliminarOrden(ordenId) {
+      const token = localStorage.getItem('adminToken');
+      try {
+        const res = await fetch(`${API_URL}/api/admin/ordenes/${ordenId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          await cargarOrdenes(token);
+          const dashRes = await fetch(`${API_URL}/api/admin/dashboard`, { headers: { 'Authorization': `Bearer ${token}` } });
+          const data = await dashRes.json();
+          document.getElementById('totalOrdenes').textContent = data.totalOrdenes || 0;
+          document.getElementById('ordenesHoy').textContent = data.ordenesHoy || 0;
+          document.getElementById('gananciasTotales').textContent = `€${parseFloat(data.gananciasTotales || 0).toFixed(2)}`;
+        } else {
+          alert('Error al eliminar la orden');
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    }
+
+    async function cargarProveedores(token) {
+      try {
+        const res = await fetch(`${API_URL}/api/admin/proveedores`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+
+        const proveedores = await res.json();
+        const tabla = document.getElementById('tablaProveedores');
+
+        if (proveedores.length === 0) {
+          tabla.innerHTML = '<p class="text-gray-600 text-center py-8">No hay proveedores registrados</p>';
+          return;
+        }
+
+        let html = '<table class="w-full"><thead class="bg-black text-yellow-400"><tr>';
+        html += '<th class="px-4 py-3 text-left">Tienda</th>';
+        html += '<th class="px-4 py-3 text-left">Contacto</th>';
+        html += '<th class="px-4 py-3 text-left">Zonas</th>';
+        html += '<th class="px-4 py-3 text-left">Estado</th>';
+        html += '<th class="px-4 py-3 text-left">Acciones</th>';
+        html += '</tr></thead><tbody>';
+
+        proveedores.forEach(prov => {
+          const zonasHtml = prov.zona.map(z => `<span class="inline-block bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold mr-1">${z}</span>`).join('');
+          const estadoClass = prov.verificado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+          const estadoText = prov.verificado ? '✅ Activo' : '⏳ Pendiente';
+
+          html += `<tr class="border-b-2 border-gray-200 hover:bg-yellow-50">
+            <td class="px-4 py-3 font-bold">${prov.nombreTienda}</td>
+            <td class="px-4 py-3"><div class="text-sm">${prov.usuario.nombre}</div><div class="text-xs text-gray-600">${prov.usuario.email}</div><div class="text-xs text-gray-600">${prov.usuario.telefono}</div></td>
+            <td class="px-4 py-3">${zonasHtml}</td>
+            <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs font-bold ${estadoClass}">${estadoText}</span></td>
+            <td class="px-4 py-3">
+              <button onclick="eliminarProveedor('${prov.usuario.id}', '${prov.nombreTienda.replace(/'/g, "\\'")}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold border border-red-800">
+                <i class="fas fa-trash mr-1"></i>Eliminar
+              </button>
+            </td>
+          </tr>`;
+        });
+
+        html += '</tbody></table>';
+        tabla.innerHTML = html;
+      } catch (error) {
+        console.error('Error cargando proveedores:', error);
+      }
+    }
+
+    async function eliminarProveedor(usuarioId, nombreTienda) {
+      if (!confirm(`⚠️ ¿Estás seguro de que quieres ELIMINAR permanentemente a "${nombreTienda}"?\n\nEsta acción no se puede deshacer.`)) return;
+
+      const token = localStorage.getItem('adminToken');
+      try {
+        const res = await fetch(`${API_URL}/api/admin/proveedores/${usuarioId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+          alert('✅ Proveedor eliminado correctamente');
+          await cargarProveedores(token);
+          const dashRes = await fetch(`${API_URL}/api/admin/dashboard`, { headers: { 'Authorization': `Bearer ${token}` } });
+          const data = await dashRes.json();
+          document.getElementById('totalProveedores').textContent = `${data.proveedoresVerificados || 0}/${data.totalProveedores || 0}`;
+        } else {
+          alert('Error al eliminar el proveedor');
+        }
+      } catch (error) {
+        alert('Error de conexión');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminNombre');
+      window.location.href = 'admin-login.html';
+    }
+  </script>
+</body>
+</html>
