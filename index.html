@@ -543,9 +543,9 @@
         const disp = r.proveedor ? r.proveedor.disponible : false;
         const cls = disp ? 'bg-green-500' : 'bg-red-500';
         const txt = disp ? 'Abierto' : 'Cerrado';
-        return '<div class="bg-white rounded-lg shadow hover:shadow-xl transition border-2 border-black overflow-hidden">' +
+        return '<div class="card-repuesto bg-white rounded-lg shadow transition border-2 border-black overflow-hidden">' +
           '<div class="h-48 bg-gray-100 flex items-center justify-center relative">' +
-          (r.imagenes && r.imagenes[0] ? '<img src="' + r.imagenes[0] + '" alt="' + r.nombre + '" class="w-full h-full object-cover">' : '<span class="text-6xl text-gray-400">🔧</span>') +
+          (r.imagenes && r.imagenes[0] ? '<img src="' + r.imagenes[0] + '" alt="' + r.nombre + '" class="card-imagen w-full h-full object-cover">' : '<span class="text-6xl text-gray-400">🔧</span>') +
           '<div class="absolute top-2 right-2 ' + cls + ' text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1"><i class="fas fa-clock"></i>' + txt + '</div>' +
           (r.destacado ? '<span class="absolute top-2 left-2 bg-yellow-400 text-black px-2 py-1 rounded font-bold text-xs border-2 border-black">⭐ DESTACADO</span>' : '') +
           '</div><div class="p-4"><h3 class="font-bold text-lg mb-1 text-black">' + r.nombre + '</h3>' +
