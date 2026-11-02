@@ -1,0 +1,199 @@
+/* ============================================
+   REPUESTOS 365 - DISEÑO 3D MODERNO
+   ============================================ */
+
+/* Header moderno minimalista */
+.header-nueva {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+  box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border-bottom: 3px solid #FFD700;
+}
+
+/* Logo con animación de anillos */
+.logo-container {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05) rotateY(5deg);
+}
+
+.logo-anillos {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  border: 3px solid #FFD700;
+  border-radius: 50%;
+  top: -10%;
+  left: -10%;
+  animation: orbitar 8s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes orbitar {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Card de producto - Minimalista 3D */
+.card-repuesto {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.card-repuesto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.card-repuesto:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(255, 215, 0, 0.25), 
+              0 10px 20px rgba(0,0,0,0.15);
+  border-color: #FFD700;
+}
+
+.card-repuesto:hover::before {
+  opacity: 1;
+}
+
+/* Imagen con efecto flotante */
+.card-imagen {
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+}
+
+.card-repuesto:hover .card-imagen {
+  transform: scale(1.1) rotateY(5deg);
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));
+}
+
+/* Botón 3D dorado */
+.btn-3d-dorado {
+  background: linear-gradient(145deg, #FFD700 0%, #FFED4E 50%, #FFD700 100%);
+  color: #000;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 8px 0 #B8860B, 
+              0 15px 30px rgba(255, 215, 0, 0.4);
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-3d-dorado:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 0 #B8860B, 
+              0 20px 40px rgba(255, 215, 0, 0.5);
+}
+
+.btn-3d-dorado:active {
+  transform: translateY(8px);
+  box-shadow: 0 0 0 #B8860B, 
+              0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Botón negro minimalista */
+.btn-negro-3d {
+  background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%);
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #333, 
+              0 10px 20px rgba(0,0,0,0.3);
+  transition: all 0.15s ease;
+}
+
+.btn-negro-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #333, 
+              0 15px 30px rgba(0,0,0,0.4);
+}
+
+.btn-negro-3d:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #333, 
+              0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Badge de precio estilo anillos */
+.badge-precio-saturno {
+  position: relative;
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+  color: #FFD700;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  overflow: visible;
+}
+
+.badge-precio-saturno::before {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  border: 2px solid #FFD700;
+  border-radius: 50%;
+  top: -10%;
+  left: -10%;
+  opacity: 0.4;
+  animation: orbitar 6s linear infinite;
+}
+
+.badge-precio-saturno::after {
+  content: '';
+  position: absolute;
+  width: 140%;
+  height: 140%;
+  border: 1px solid #FFD700;
+  border-radius: 50%;
+  top: -20%;
+  left: -20%;
+  opacity: 0.2;
+  animation: orbitar 10s linear infinite reverse;
+}
+
+/* Fondo minimalista moderno */
+body {
+  background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 50%, #ffffff 100%);
+  background-attachment: fixed;
+}
+
+/* Secciones con profundidad */
+.seccion-3d {
+  background: white;
+  border-radius: 30px;
+  padding: 40px;
+  margin: 30px auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+}
