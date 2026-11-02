@@ -1,179 +1,22 @@
-/* ============================================
-   REPUESTOS 365 - DISEÑO 3D MODERNO (OVERRIDE)
-   ============================================ */
 
-/* Header negro degradado con borde dorado */
-header, .header-nueva, nav {
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%) !important;
-  box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15) !important;
-  border-bottom: 3px solid #FFD700 !important;
-}
-
-header *, .header-nueva *, nav * {
-  color: white !important;
-}
-
-/* Logo con animación de anillos */
-.logo-container {
-  position: relative;
-  transition: transform 0.3s ease;
-}
-
-.logo-container:hover {
-  transform: scale(1.05) rotateY(5deg);
-}
-
-/* Card de producto - Minimalista 3D */
-.card-repuesto, .bg-white.rounded-lg {
-  background: white !important;
-  border-radius: 20px !important;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08) !important;
-  border: 2px solid transparent !important;
-  position: relative;
-}
-
-.card-repuesto:hover, .bg-white.rounded-lg:hover {
-  transform: translateY(-12px) scale(1.02) !important;
-  box-shadow: 0 25px 50px rgba(255, 215, 0, 0.25), 
-              0 10px 20px rgba(0,0,0,0.15) !important;
-  border-color: #FFD700 !important;
-}
-
-/* Imagen con efecto flotante */
-.card-imagen, .w-full.h-full.object-cover {
-  transition: all 0.4s ease !important;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)) !important;
-}
-
-.card-repuesto:hover .card-imagen, 
-.bg-white.rounded-lg:hover .w-full.h-full.object-cover {
-  transform: scale(1.1) rotateY(5deg) !important;
-  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3)) !important;
-}
-
-/* Botones 3D dorados - Sobrescribir Tailwind */
-.btn-3d-dorado, button.bg-yellow-400, button.bg-yellow-500 {
-  background: linear-gradient(145deg, #FFD700 0%, #FFED4E 50%, #FFD700 100%) !important;
-  color: #000 !important;
-  border: none !important;
-  padding: 14px 32px !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-  font-size: 16px !important;
-  cursor: pointer !important;
-  position: relative !important;
-  box-shadow: 0 8px 0 #B8860B, 
-              0 15px 30px rgba(255, 215, 0, 0.4) !important;
-  transition: all 0.15s ease !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-}
-
-.btn-3d-dorado:hover, button.bg-yellow-400:hover, button.bg-yellow-500:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 10px 0 #B8860B, 
-              0 20px 40px rgba(255, 215, 0, 0.5) !important;
-}
-
-.btn-3d-dorado:active, button.bg-yellow-400:active, button.bg-yellow-500:active {
-  transform: translateY(8px) !important;
-  box-shadow: 0 0 0 #B8860B, 
-              0 5px 15px rgba(255, 215, 0, 0.3) !important;
-}
-
-/* Botones negros 3D */
-.btn-negro-3d, button.bg-black, button.bg-gray-900 {
-  background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%) !important;
-  color: #FFD700 !important;
-  border: 2px solid #FFD700 !important;
-  padding: 14px 32px !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  box-shadow: 0 6px 0 #333, 
-              0 10px 20px rgba(0,0,0,0.3) !important;
-  transition: all 0.15s ease !important;
-}
-
-.btn-negro-3d:hover, button.bg-black:hover, button.bg-gray-900:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 0 #333, 
-              0 15px 30px rgba(0,0,0,0.4) !important;
-}
-
-.btn-negro-3d:active, button.bg-black:active, button.bg-gray-900:active {
-  transform: translateY(6px) !important;
-  box-shadow: 0 0 0 #333, 
-              0 4px 10px rgba(0,0,0,0.3) !important;
-}
-
-/* Badge de tasa BCV estilo Saturno */
-#badgeTasa, #badgeTasaMovil, .bg-black.rounded {
-  background: linear-gradient(135deg, #000 0%, #1a1a1a 100%) !important;
-  color: #FFD700 !important;
-  padding: 12px 24px !important;
-  border-radius: 50px !important;
-  font-weight: 800 !important;
-  font-size: 16px !important;
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3) !important;
-  position: relative !important;
-  overflow: visible !important;
-  border: 2px solid #FFD700 !important;
-}
-
-/* Fondo minimalista moderno */
-body {
-  background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 50%, #ffffff 100%) !important;
-  background-attachment: fixed !important;
-}
-
-/* Secciones con profundidad */
-.seccion-3d, .bg-white.rounded-xl {
-  background: white !important;
-  border-radius: 30px !important;
-  padding: 40px !important;
-  margin: 30px auto !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.08) !important;
-  border: 1px solid rgba(255, 215, 0, 0.1) !important;
-}
-
-/* Animación de anillos para badges */
-@keyframes orbitar {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.1); }
-  100% { transform: rotate(360deg) scale(1); }
-}
-
-#badgeTasa::before, #badgeTasaMovil::before {
-  content: '';
-  position: absolute;
-  width: 120%;
-  height: 120%;
-  border: 2px solid #FFD700;
-  border-radius: 50%;
-  top: -10%;
-  left: -10%;
-  opacity: 0.4;
-  animation: orbitar 6s linear infinite;
-  pointer-events: none;
-}
 /* ==========================================
-   LOGO CON ANILLOS DE SATURNO (OVERWRITE)
+   LOGO CON ANILLOS DE SATURNO - ESPECÍFICO
    ========================================== */
-.logo-container {
+header .logo-container,
+nav .logo-container,
+.logo-wrapper {
   position: relative !important;
   display: inline-block !important;
   transition: transform 0.3s ease !important;
+  z-index: 10;
 }
 
-.logo-container:hover {
-  transform: scale(1.1) !important;
-}
-
-.logo-container::before,
-.logo-container::after {
+header .logo-container::before,
+header .logo-container::after,
+nav .logo-container::before,
+nav .logo-container::after,
+.logo-wrapper::before,
+.logo-wrapper::after {
   content: '' !important;
   position: absolute !important;
   border: 3px solid #FFD700 !important;
@@ -182,25 +25,40 @@ body {
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   pointer-events: none !important;
+  z-index: -1;
 }
 
-.logo-container::before {
+header .logo-container::before,
+nav .logo-container::before,
+.logo-wrapper::before {
   width: 140% !important;
   height: 140% !important;
-  animation: orbitar 6s linear infinite !important;
+  animation: logoOrbitar 6s linear infinite !important;
   opacity: 0.6 !important;
 }
 
-.logo-container::after {
+header .logo-container::after,
+nav .logo-container::after,
+.logo-wrapper::after {
   width: 160% !important;
   height: 160% !important;
   border-width: 2px !important;
-  animation: orbitar 8s linear infinite reverse !important;
+  animation: logoOrbitar 8s linear infinite reverse !important;
   opacity: 0.3 !important;
 }
 
-@keyframes orbitar {
+@keyframes logoOrbitar {
   0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
   50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); }
   100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
+
+/* Quitar anillos de cualquier otro elemento */
+#badgeTasa::before,
+#badgeTasa::after,
+#badgeTasaMovil::before,
+#badgeTasaMovil::after,
+.badge-precio-saturno::before,
+.badge-precio-saturno::after {
+  display: none !important;
 }
