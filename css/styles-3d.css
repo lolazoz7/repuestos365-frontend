@@ -159,3 +159,48 @@ body {
   animation: orbitar 6s linear infinite;
   pointer-events: none;
 }
+/* ==========================================
+   LOGO CON ANILLOS DE SATURNO (OVERWRITE)
+   ========================================== */
+.logo-container {
+  position: relative !important;
+  display: inline-block !important;
+  transition: transform 0.3s ease !important;
+}
+
+.logo-container:hover {
+  transform: scale(1.1) !important;
+}
+
+.logo-container::before,
+.logo-container::after {
+  content: '' !important;
+  position: absolute !important;
+  border: 3px solid #FFD700 !important;
+  border-radius: 50% !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+}
+
+.logo-container::before {
+  width: 140% !important;
+  height: 140% !important;
+  animation: orbitar 6s linear infinite !important;
+  opacity: 0.6 !important;
+}
+
+.logo-container::after {
+  width: 160% !important;
+  height: 160% !important;
+  border-width: 2px !important;
+  animation: orbitar 8s linear infinite reverse !important;
+  opacity: 0.3 !important;
+}
+
+@keyframes orbitar {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
