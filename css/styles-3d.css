@@ -139,8 +139,8 @@ h2.text-5xl {
   position: fixed !important;
   bottom: 25px !important;
   right: 25px !important;
-  width: 65px !important;
-  height: 65px !important;
+  width: 75px !important;
+  height: 75px !important;
   border-radius: 50% !important;
   background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
   border: 3px solid #000 !important;
@@ -150,7 +150,7 @@ h2.text-5xl {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 30px !important;
+  font-size: 35px !important;
   transition: all 0.3s ease !important;
   animation: pulsarBoton 2s ease-in-out infinite !important;
 }
