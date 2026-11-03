@@ -13,7 +13,7 @@ header *, nav * {
   color: white !important;
 }
 
-/* LOGO - Tamaño correcto sin fondo blanco */
+/* LOGO - Grande y sin fondo blanco */
 .logo-container {
   position: relative !important;
   display: inline-flex !important;
@@ -22,17 +22,24 @@ header *, nav * {
 }
 
 .logo-container img {
-  max-height: 50px !important;
+  max-height: 60px !important;
   width: auto !important;
   background: transparent !important;
   border-radius: 0 !important;
+  /* Eliminar fondo blanco */
+  mix-blend-mode: multiply !important;
+  filter: drop-shadow(0 2px 8px rgba(255,215,0,0.3)) !important;
 }
 
 .logo-container:hover {
-  transform: scale(1.05) !important;
+  transform: scale(1.08) !important;
 }
 
-/* Anillos de Saturno SOLO alrededor del logo */
+/* Quitar anillos CSS que se ven mal */
+.logo-container::before,
+.logo-container::after {
+  display: none !important;
+}/* Anillos de Saturno SOLO alrededor del logo */
 .logo-container::before,
 .logo-container::after {
   content: '' !important;
