@@ -49,45 +49,59 @@ header a:hover {
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* BADGE TASA: Anillos perfectamente centrados */
+/* BADGE TASA: Cuadro dorado + anillos giratorios */
 .badge-tasa {
   position: relative !important;
-  overflow: visible !important;
   display: inline-block !important;
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 100%) !important;
+  color: #FFD700 !important;
+  padding: 8px 16px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  border: 2px solid #FFD700 !important;
+  box-shadow: 0 4px 15px rgba(255,215,0,0.4) !important;
+  z-index: 1 !important;
 }
 
-.badge-tasa::before,
-.badge-tasa::after {
-  content: '' !important;
+/* Contenedor de anillos */
+.badge-tasa .anillo-externo,
+.badge-tasa .anillo-interno {
   position: absolute !important;
   border: 2px solid #FFD700 !important;
   border-radius: 50% !important;
   top: 50% !important;
   left: 50% !important;
-  transform: translate(-50%, -50%) !important;
   pointer-events: none !important;
-  z-index: -1 !important;
-  transform-origin: center center !important;
+  z-index: 0 !important;
 }
 
-.badge-tasa::before {
-  width: 140% !important;
-  height: 140% !important;
-  animation: girarBadge 7s linear infinite !important;
+.badge-tasa .anillo-externo {
+  width: 160px !important;
+  height: 160px !important;
+  margin-top: -80px !important;
+  margin-left: -80px !important;
+  animation: rotarAnillo1 8s linear infinite !important;
   opacity: 0.6 !important;
 }
 
-.badge-tasa::after {
-  width: 160% !important;
-  height: 160% !important;
+.badge-tasa .anillo-interno {
+  width: 140px !important;
+  height: 140px !important;
+  margin-top: -70px !important;
+  margin-left: -70px !important;
   border-width: 1.5px !important;
-  animation: girarBadge 10s linear infinite reverse !important;
-  opacity: 0.35 !important;
+  animation: rotarAnillo2 6s linear infinite reverse !important;
+  opacity: 0.4 !important;
 }
 
-@keyframes girarBadge {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes rotarAnillo1 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rotarAnillo2 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }/* BOTONES CTA: Brillo pulsante */
 a[href="proveedor.html"],
 a[href="delivery.html"] {
