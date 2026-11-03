@@ -49,10 +49,11 @@ header a:hover {
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* BADGE TASA: Anillos giratorios */
+/* BADGE TASA: Anillos perfectamente centrados */
 .badge-tasa {
   position: relative !important;
   overflow: visible !important;
+  display: inline-block !important;
 }
 
 .badge-tasa::before,
@@ -63,26 +64,31 @@ header a:hover {
   border-radius: 50% !important;
   top: 50% !important;
   left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   pointer-events: none !important;
   z-index: -1 !important;
+  transform-origin: center center !important;
 }
 
 .badge-tasa::before {
-  width: 130% !important;
-  height: 130% !important;
-  animation: girar 6s linear infinite !important;
+  width: 140% !important;
+  height: 140% !important;
+  animation: girarBadge 7s linear infinite !important;
   opacity: 0.6 !important;
 }
 
 .badge-tasa::after {
-  width: 150% !important;
-  height: 150% !important;
-  border-width: 1px !important;
-  animation: girar 9s linear infinite reverse !important;
-  opacity: 0.3 !important;
+  width: 160% !important;
+  height: 160% !important;
+  border-width: 1.5px !important;
+  animation: girarBadge 10s linear infinite reverse !important;
+  opacity: 0.35 !important;
 }
 
-/* BOTONES CTA: Brillo pulsante */
+@keyframes girarBadge {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}/* BOTONES CTA: Brillo pulsante */
 a[href="proveedor.html"],
 a[href="delivery.html"] {
   animation: pulsar 2s ease-in-out infinite !important;
