@@ -642,5 +642,32 @@ async function cargarTasaBCV() {
   setTasa(982.00, 'BCV-fijo');
 }
 </script>
+
+<!-- CHATBOT ASISTENTE VIRTUAL -->
+<button class="chatbot-boton" onclick="toggleChat()" title="¿Necesitas ayuda?">🤖</button>
+
+<div id="chatbot-container">
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <h3>Asistente Repuestos 365</h3>
+        <p>🟢 En línea - Respondo al instante</p>
+      </div>
+    </div>
+    <button class="chat-cerrar" onclick="cerrarChat()">✕</button>
+  </div>
+  
+  <div id="chat-body"></div>
+  
+  <div id="chat-botones"></div>
+  
+  <div class="chat-input-container">
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta..." autocomplete="off">
+    <button id="chat-enviar" onclick="if(document.getElementById('chat-input').value.trim()) enviarMensaje(document.getElementById('chat-input').value.trim())">➤</button>
+  </div>
+</div>
+
+<script src="js/chatbot.js"></script>
 </body>
 </html>
