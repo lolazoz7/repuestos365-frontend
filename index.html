@@ -16,7 +16,30 @@
   <header class="bg-white shadow-lg border-b-4 border-black sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="logo-container"><img src="logo-nuevo.png" alt="Repuestos 365" class="h-10 w-auto"></div>
+        <div class="logo-container" style="display:flex;align-items:center;gap:12px;">
+  <svg width="55" height="55" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 6px rgba(255,215,0,0.5));">
+    <!-- Anillo exterior girando -->
+    <ellipse cx="50" cy="50" rx="48" ry="18" fill="none" stroke="#FFD700" stroke-width="2.5" opacity="0.7" transform="rotate(-15 50 50)">
+      <animateTransform attributeName="transform" type="rotate" from="-15 50 50" to="345 50 50" dur="8s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Anillo interior -->
+    <ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5" transform="rotate(15 50 50)">
+      <animateTransform attributeName="transform" type="rotate" from="15 50 50" to="-345 50 50" dur="6s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Auto negro -->
+    <path d="M 20 55 L 25 45 Q 30 40 40 40 L 60 40 Q 70 40 75 45 L 80 55 L 78 60 Q 75 62 72 60 L 70 58 Q 65 55 60 55 L 40 55 Q 35 55 30 58 L 28 60 Q 25 62 22 60 Z" fill="#000" stroke="#FFD700" stroke-width="1"/>
+    <!-- Ruedas -->
+    <circle cx="32" cy="60" r="6" fill="#1a1a1a" stroke="#FFD700" stroke-width="1.5"/>
+    <circle cx="68" cy="60" r="6" fill="#1a1a1a" stroke="#FFD700" stroke-width="1.5"/>
+    <!-- Centro de ruedas dorado -->
+    <circle cx="32" cy="60" r="2.5" fill="#FFD700"/>
+    <circle cx="68" cy="60" r="2.5" fill="#FFD700"/>
+  </svg>
+  <div style="display:flex;flex-direction:column;line-height:1;">
+    <span style="font-weight:900;font-size:18px;color:#FFD700;letter-spacing:1px;">Repuestos 365</span>
+    <span style="font-size:10px;color:#ccc;letter-spacing:0.5px;">Naguanagua · Valencia · San Diego</span>
+  </div>
+</div>
         <div>
           <h1 class="text-xl font-bold text-black">Repuestos 365</h1>
           <p class="text-xs text-gray-700">Naguanagua · Valencia · San Diego</p>
