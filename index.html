@@ -13,8 +13,17 @@
 <link rel="stylesheet" href="css/styles-3d.css?v=2"></head>
 <body class="bg-gray-50">
 
-  <header class="bg-white shadow-lg border-b-4 border-black sticky top-0 z-50">
+  <header class="bg-black shadow-lg border-b-4 border-yellow-400 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+  <div style="background:#fff;border-radius:10px;padding:4px 6px;border:2px solid #FFD700;box-shadow:0 3px 10px rgba(255,215,0,0.4);">
+    <img src="logo-nuevo.png" alt="Repuestos 365" style="height:40px;width:auto;display:block;">
+  </div>
+  <div style="display:flex;flex-direction:column;line-height:1.1;">
+    <span style="font-weight:900;font-size:14px;color:#FFD700;">Repuestos 365</span>
+    <span style="font-size:9px;color:#ccc;letter-spacing:0.5px;">Naguanagua · Valencia · San Diego</span>
+  </div>
+</a>
     
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -30,8 +39,8 @@
           <span id="contadorCarrito" class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-black rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
         </button>
         <button onclick="mostrarHistorial()" class="text-black hover:text-yellow-600 font-bold"><i class="fas fa-history mr-1"></i>Mis compras</button>
-        <a href="proveedor.html" class="bg-yellow-400 text-black px-4 py-2 rounded font-bold hover:bg-yellow-500 border-2 border-yellow-400"><i class="fas fa-store mr-1"></i>Soy Proveedor</a>
-        <a href="delivery.html" class="bg-yellow-400 text-black px-4 py-2 rounded font-bold hover:bg-yellow-500 border-2 border-yellow-400"><i class="fas fa-truck mr-1"></i>Soy Delivery</a>
+        <a href="proveedor.html" class="bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold hover:bg-yellow-500 text-sm"><i class="fas fa-store mr-1"></i>Soy Proveedor</a>
+        <a href="delivery.html" class="bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold hover:bg-yellow-500 text-sm"><i class="fas fa-truck mr-1"></i>Soy Delivery</a>
       </nav>
       <div class="flex md:hidden items-center gap-4">
         <button onclick="abrirCarrito()" class="relative text-black text-2xl">
@@ -48,8 +57,8 @@
         <a href="#como-funciona" class="block text-black hover:text-yellow-600 font-bold"><i class="fas fa-info-circle mr-2"></i>Cómo Funciona</a>
         <p id="badgeTasaMovil" class="text-xs font-bold text-gray-700">€1 = Bs --</p>
         <button onclick="mostrarHistorial()" class="block w-full text-left text-black hover:text-yellow-600 font-bold"><i class="fas fa-history mr-2"></i>Mis compras</button>
-        <a href="proveedor.html" class="block bg-yellow-400 text-black px-4 py-2 rounded font-bold text-center"><i class="fas fa-store mr-1"></i>Soy Proveedor</a>
-        <a href="delivery.html" class="block bg-yellow-400 text-black px-4 py-2 rounded font-bold text-center"><i class="fas fa-truck mr-1"></i>Soy Delivery</a>
+        <a href="proveedor.html" class="block bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold text-center text-sm"><i class="fas fa-store mr-1"></i>Soy Proveedor</a>
+        <a href="delivery.html" class="block bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold text-center text-sm"><i class="fas fa-truck mr-1"></i>Soy Delivery</a>
       </div>
     </div>
   </header>
